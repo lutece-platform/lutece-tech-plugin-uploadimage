@@ -1,62 +1,62 @@
-<form method="post"  action="jsp/admin/plugins/uploadimage/GetViewOptions.jsp?action=add">
-		<input class="btn btn-primary pull-right" type="submit" value="Creer une option">
+<form method="post" action="jsp/admin/plugins/uploadimage/GetViewOptions.jsp?action=add">
+    <input class="btn btn-primary pull-right" type="submit" value="Creer une option">
 </form>
 <@messages errors=errors /> <@messages infos=infos />
 <div class="box-body table-responsive">
-				<div>
-			
-				</div>				
-				<form method="post"  action="jsp/admin/plugins/uploadimage/ManageUploadimage.jsp">
-					<@paginationAdmin paginator=paginator form=0 combo=1  />
-				</form>
-				<table class="table table-hover">
-					<tr>
-						<th>
-						#i18n{uploadimage.option.FieldName}
-						</th>
-						<th>
-						Ratio
-						</th>
-						<th>
-						#i18n{uploadimage.option.Height}
-						</th>
-						<th>
-						 #i18n{uploadimage.option.Width}
-						</th>
-						<th>
-						 #i18n{uploadimage.option.Action}
-						</th>
-					</tr>
-					<#list list_options as option>
-						<tr>
-							<td>
-								${option.fieldName!}
-							</td>
-							<td>
-								${option.ratio!}
-							</td>
-							<td>
-								${option.height!}
-							</td>
-							<td>
-								${option.width!}
-							</td>
-							<td>
-								<a class="btn btn-primary btn-xs btn-flat" href="jsp/admin/plugins/uploadimage/GetViewOptions.jsp?id_option=${option.id}&action=modify_option" title="#i18n{portal.util.labelModify}">
-									<i class="fa fa-pencil"></i>
-								</a>
-								<a class="btn btn-primary btn-xs btn-flat" title="#i18n{announce.manage_categories.formPreview}" href="jsp/admin/plugins/uploadimage/GetViewOptions.jsp?id_option=${option.id}">
-									<i class="fa fa-eye"></i>
-								</a>
-								<a class="btn btn-danger btn-xs btn-flat" title="#i18n{announce.manage_categories.removeCategoryTitle}" href="jsp/admin/plugins/uploadimage/GetConfirmRemoveOptions.jsp?id_option=${option.id}">
-									<i class="fa fa-trash"></i>
-								</a>
-							</td>
-						</tr>
-					</#list>
-				</table>
-				<form method="post"  action="jsp/admin/plugins/uploadimage/ManageUploadimage.jsp">
-					<@paginationAdmin paginator=paginator form=0 combo=1  />
-				</form>
+    <div>
+
+    </div>
+    <form method="post" action="jsp/admin/plugins/uploadimage/ManageUploadimage.jsp">
+    <@paginationAdmin paginator=paginator form=0 combo=1  />
+    </form>
+    <table class="table table-hover">
+        <tr>
+            <th>
+                #i18n{uploadimage.option.FieldName}
+            </th>
+            <th>
+                Ratio
+            </th>
+            <th>
+                #i18n{uploadimage.option.Height}
+            </th>
+            <th>
+                #i18n{uploadimage.option.Width}
+            </th>
+            <th>
+                #i18n{uploadimage.option.Action}
+            </th>
+        </tr>
+    <#list list_options as option>
+        <tr>
+            <td>
+            ${option.fieldName!}
+            </td>
+            <td>
+            ${option.ratio!}
+            </td>
+            <td>
+            ${option.height!}
+            </td>
+            <td>
+            ${option.width!}
+            </td>
+            <td>
+                <a class="btn btn-primary btn-xs btn-flat" href="jsp/admin/plugins/uploadimage/GetViewOptions.jsp?id_option=${option.id}&action=modify_option" title="#i18n{portal.util.labelModify}">
+                    <i class="fa fa-pencil"></i>
+                </a>
+                <a class="btn btn-primary btn-xs btn-flat" title="#i18n{announce.manage_categories.formPreview}" href="jsp/admin/plugins/uploadimage/GetViewOptions.jsp?id_option=${option.id}">
+                    <i class="fa fa-eye"></i>
+                </a>
+                <a class="btn btn-danger btn-xs btn-flat" title="#i18n{announce.manage_categories.removeCategoryTitle}"
+                   href="jsp/admin/plugins/uploadimage/GetConfirmRemoveOptions.jsp?id_option=${option.id}">
+                    <i class="fa fa-trash"></i>
+                </a>
+            </td>
+        </tr>
+    </#list>
+    </table>
+    <form method="post" action="jsp/admin/plugins/uploadimage/ManageUploadimage.jsp">
+    <@paginationAdmin paginator=paginator form=0 combo=1  />
+    </form>
 </div>
-	

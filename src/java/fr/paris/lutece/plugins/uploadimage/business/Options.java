@@ -30,71 +30,74 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * License 1.0
- */ 
+ */
 package fr.paris.lutece.plugins.uploadimage.business;
 
 import javax.validation.constraints.*;
-import org.hibernate.validator.constraints.*;
 
+import org.hibernate.validator.constraints.*;
 
 /**
  * This is the business class for the object Options
- */ 
+ */
 public class Options
 {
     // Variables declarations 
     private int _nId;
-    
+
     private boolean _bStrict;
-    
+
     private boolean _bResponsive;
-    
+
     private boolean _bCheckImageOrigin;
-    
+
     private boolean _bModal;
-    
+
     private boolean _bGuides;
-    
+
     private boolean _bHighlight;
-    
+
     private boolean _bBackground;
-    
+
     private boolean _bAutoCrop;
-    
+
     private boolean _bDragCrop;
-    
+
     private boolean _bMovable;
-    
+
     private boolean _bRotatable;
-    
+
     private boolean _bZoomable;
-    
+
     private boolean _bTouchDragZoom;
-    
+
     private boolean _bMouseWheelZoom;
-    
+
     private boolean _bCropBoxMovable;
-    
+
     private boolean _bCropBoxResizable;
-    
+
     private boolean _bDoubleClickToggle;
-    
+
     private int _nWidth;
-    
+
     private int _nHeight;
-    
+
     private int _nX;
-    
+
     private int _nY;
-    
-    @Size( max = 50 , message = "#i18n{uploadimage.validation.options.Rotate.size}" ) 
+
+    private int nMaxHeight;
+
+    @Size( max = 50, message = "#i18n{uploadimage.validation.options.Rotate.size}" )
     private String _strRatio;
-    
-    @Size( max = 50 , message = "#i18n{uploadimage.validation.options.Rotate.size}" ) 
+
+    @Size( max = 50, message = "#i18n{uploadimage.validation.options.Rotate.size}" )
     private String _strFieldName;
 
     /**
      * Returns the Id
+     *
      * @return The Id
      */
     public int getId( )
@@ -104,8 +107,10 @@ public class Options
 
     /**
      * Sets the Id
-     * @param nId The Id
-     */ 
+     *
+     * @param nId
+     *         The Id
+     */
     public void setId( int nId )
     {
         _nId = nId;
@@ -113,6 +118,7 @@ public class Options
 
     /**
      * Returns the Strict
+     *
      * @return The Strict
      */
     public boolean getStrict( )
@@ -122,14 +128,18 @@ public class Options
 
     /**
      * Sets the Strict
-     * @param bStrict The Strict
-     */ 
+     *
+     * @param bStrict
+     *         The Strict
+     */
     public void setStrict( boolean bStrict )
     {
         _bStrict = bStrict;
     }
+
     /**
      * Returns the Responsive
+     *
      * @return The Responsive
      */
     public boolean getResponsive( )
@@ -139,14 +149,18 @@ public class Options
 
     /**
      * Sets the Responsive
-     * @param bResponsive The Responsive
-     */ 
+     *
+     * @param bResponsive
+     *         The Responsive
+     */
     public void setResponsive( boolean bResponsive )
     {
         _bResponsive = bResponsive;
     }
+
     /**
      * Returns the CheckImageOrigin
+     *
      * @return The CheckImageOrigin
      */
     public boolean getCheckImageOrigin( )
@@ -156,14 +170,18 @@ public class Options
 
     /**
      * Sets the CheckImageOrigin
-     * @param bCheckImageOrigin The CheckImageOrigin
-     */ 
+     *
+     * @param bCheckImageOrigin
+     *         The CheckImageOrigin
+     */
     public void setCheckImageOrigin( boolean bCheckImageOrigin )
     {
         _bCheckImageOrigin = bCheckImageOrigin;
     }
+
     /**
      * Returns the Modal
+     *
      * @return The Modal
      */
     public boolean getModal( )
@@ -173,14 +191,18 @@ public class Options
 
     /**
      * Sets the Modal
-     * @param bModal The Modal
-     */ 
+     *
+     * @param bModal
+     *         The Modal
+     */
     public void setModal( boolean bModal )
     {
         _bModal = bModal;
     }
+
     /**
      * Returns the Guides
+     *
      * @return The Guides
      */
     public boolean getGuides( )
@@ -190,14 +212,18 @@ public class Options
 
     /**
      * Sets the Guides
-     * @param bGuides The Guides
-     */ 
+     *
+     * @param bGuides
+     *         The Guides
+     */
     public void setGuides( boolean bGuides )
     {
         _bGuides = bGuides;
     }
+
     /**
      * Returns the Highlight
+     *
      * @return The Highlight
      */
     public boolean getHighlight( )
@@ -207,14 +233,18 @@ public class Options
 
     /**
      * Sets the Highlight
-     * @param bHighlight The Highlight
-     */ 
+     *
+     * @param bHighlight
+     *         The Highlight
+     */
     public void setHighlight( boolean bHighlight )
     {
         _bHighlight = bHighlight;
     }
+
     /**
      * Returns the Background
+     *
      * @return The Background
      */
     public boolean getBackground( )
@@ -224,14 +254,18 @@ public class Options
 
     /**
      * Sets the Background
-     * @param bBackground The Background
-     */ 
+     *
+     * @param bBackground
+     *         The Background
+     */
     public void setBackground( boolean bBackground )
     {
         _bBackground = bBackground;
     }
+
     /**
      * Returns the AutoCrop
+     *
      * @return The AutoCrop
      */
     public boolean getAutoCrop( )
@@ -241,14 +275,18 @@ public class Options
 
     /**
      * Sets the AutoCrop
-     * @param bAutoCrop The AutoCrop
-     */ 
+     *
+     * @param bAutoCrop
+     *         The AutoCrop
+     */
     public void setAutoCrop( boolean bAutoCrop )
     {
         _bAutoCrop = bAutoCrop;
     }
+
     /**
      * Returns the DragCrop
+     *
      * @return The DragCrop
      */
     public boolean getDragCrop( )
@@ -258,14 +296,18 @@ public class Options
 
     /**
      * Sets the DragCrop
-     * @param bDragCrop The DragCrop
-     */ 
+     *
+     * @param bDragCrop
+     *         The DragCrop
+     */
     public void setDragCrop( boolean bDragCrop )
     {
         _bDragCrop = bDragCrop;
     }
+
     /**
      * Returns the Movable
+     *
      * @return The Movable
      */
     public boolean getMovable( )
@@ -275,14 +317,18 @@ public class Options
 
     /**
      * Sets the Movable
-     * @param bMovable The Movable
-     */ 
+     *
+     * @param bMovable
+     *         The Movable
+     */
     public void setMovable( boolean bMovable )
     {
         _bMovable = bMovable;
     }
+
     /**
      * Returns the Rotatable
+     *
      * @return The Rotatable
      */
     public boolean getRotatable( )
@@ -292,14 +338,18 @@ public class Options
 
     /**
      * Sets the Rotatable
-     * @param bRotatable The Rotatable
-     */ 
+     *
+     * @param bRotatable
+     *         The Rotatable
+     */
     public void setRotatable( boolean bRotatable )
     {
         _bRotatable = bRotatable;
     }
+
     /**
      * Returns the Zoomable
+     *
      * @return The Zoomable
      */
     public boolean getZoomable( )
@@ -309,14 +359,18 @@ public class Options
 
     /**
      * Sets the Zoomable
-     * @param bZoomable The Zoomable
-     */ 
+     *
+     * @param bZoomable
+     *         The Zoomable
+     */
     public void setZoomable( boolean bZoomable )
     {
         _bZoomable = bZoomable;
     }
+
     /**
      * Returns the TouchDragZoom
+     *
      * @return The TouchDragZoom
      */
     public boolean getTouchDragZoom( )
@@ -326,14 +380,18 @@ public class Options
 
     /**
      * Sets the TouchDragZoom
-     * @param bTouchDragZoom The TouchDragZoom
-     */ 
+     *
+     * @param bTouchDragZoom
+     *         The TouchDragZoom
+     */
     public void setTouchDragZoom( boolean bTouchDragZoom )
     {
         _bTouchDragZoom = bTouchDragZoom;
     }
+
     /**
      * Returns the MouseWheelZoom
+     *
      * @return The MouseWheelZoom
      */
     public boolean getMouseWheelZoom( )
@@ -343,14 +401,18 @@ public class Options
 
     /**
      * Sets the MouseWheelZoom
-     * @param bMouseWheelZoom The MouseWheelZoom
-     */ 
+     *
+     * @param bMouseWheelZoom
+     *         The MouseWheelZoom
+     */
     public void setMouseWheelZoom( boolean bMouseWheelZoom )
     {
         _bMouseWheelZoom = bMouseWheelZoom;
     }
+
     /**
      * Returns the CropBoxMovable
+     *
      * @return The CropBoxMovable
      */
     public boolean getCropBoxMovable( )
@@ -360,14 +422,18 @@ public class Options
 
     /**
      * Sets the CropBoxMovable
-     * @param bCropBoxMovable The CropBoxMovable
-     */ 
+     *
+     * @param bCropBoxMovable
+     *         The CropBoxMovable
+     */
     public void setCropBoxMovable( boolean bCropBoxMovable )
     {
         _bCropBoxMovable = bCropBoxMovable;
     }
+
     /**
      * Returns the CropBoxResizable
+     *
      * @return The CropBoxResizable
      */
     public boolean getCropBoxResizable( )
@@ -377,14 +443,18 @@ public class Options
 
     /**
      * Sets the CropBoxResizable
-     * @param bCropBoxResizable The CropBoxResizable
-     */ 
+     *
+     * @param bCropBoxResizable
+     *         The CropBoxResizable
+     */
     public void setCropBoxResizable( boolean bCropBoxResizable )
     {
         _bCropBoxResizable = bCropBoxResizable;
     }
+
     /**
      * Returns the DoubleClickToggle
+     *
      * @return The DoubleClickToggle
      */
     public boolean getDoubleClickToggle( )
@@ -394,14 +464,18 @@ public class Options
 
     /**
      * Sets the DoubleClickToggle
-     * @param bDoubleClickToggle The DoubleClickToggle
-     */ 
+     *
+     * @param bDoubleClickToggle
+     *         The DoubleClickToggle
+     */
     public void setDoubleClickToggle( boolean bDoubleClickToggle )
     {
         _bDoubleClickToggle = bDoubleClickToggle;
     }
+
     /**
      * Returns the Width
+     *
      * @return The Width
      */
     public int getWidth( )
@@ -411,14 +485,18 @@ public class Options
 
     /**
      * Sets the Width
-     * @param nWidth The Width
-     */ 
+     *
+     * @param nWidth
+     *         The Width
+     */
     public void setWidth( int nWidth )
     {
         _nWidth = nWidth;
     }
+
     /**
      * Returns the Height
+     *
      * @return The Height
      */
     public int getHeight( )
@@ -428,14 +506,18 @@ public class Options
 
     /**
      * Sets the Height
-     * @param nHeight The Height
-     */ 
+     *
+     * @param nHeight
+     *         The Height
+     */
     public void setHeight( int nHeight )
     {
         _nHeight = nHeight;
     }
+
     /**
      * Returns the X
+     *
      * @return The X
      */
     public int getX( )
@@ -445,14 +527,18 @@ public class Options
 
     /**
      * Sets the X
-     * @param nX The X
-     */ 
+     *
+     * @param nX
+     *         The X
+     */
     public void setX( int nX )
     {
         _nX = nX;
     }
+
     /**
      * Returns the Y
+     *
      * @return The Y
      */
     public int getY( )
@@ -462,14 +548,18 @@ public class Options
 
     /**
      * Sets the Y
-     * @param nY The Y
-     */ 
+     *
+     * @param nY
+     *         The Y
+     */
     public void setY( int nY )
     {
         _nY = nY;
     }
+
     /**
      * Returns the Rotate
+     *
      * @return The Rotate
      */
     public String getRatio( )
@@ -478,16 +568,19 @@ public class Options
     }
 
     /**
-     * Sets the Rotate
-     * @param strRotate The Rotate
-     */ 
+     * Sets the ratio
+     *
+     * @param strRatio
+     *         The Ratio
+     */
     public void setRatio( String strRatio )
     {
-    	_strRatio = strRatio;
+        _strRatio = strRatio;
     }
-    
+
     /**
      * Returns the FieldName
+     *
      * @return The FieldName
      */
     public String getFieldName( )
@@ -497,11 +590,33 @@ public class Options
 
     /**
      * Sets the FieldName
-     * @param strRotate The FieldName
-     */ 
+     *
+     * @param fieldName
+     *         The FieldName
+     */
     public void setFieldName( String fieldName )
     {
-    	_strFieldName = fieldName;
+        _strFieldName = fieldName;
     }
-   
+
+    /**
+     * Returns the Max height for the image
+     *
+     * @return
+     */
+    public int getMaxHeight( )
+    {
+        return nMaxHeight;
+    }
+
+    /**
+     * Set the Max height for the image
+     *
+     * @param nMaxHeight
+     *         The max height
+     */
+    public void setMaxHeight( int nMaxHeight )
+    {
+        this.nMaxHeight = nMaxHeight;
+    }
 }

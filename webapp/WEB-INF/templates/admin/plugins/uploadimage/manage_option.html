@@ -1,159 +1,183 @@
-	<@uploadImage />
-	<#macro uploadImage >
-	<div class="container">
-	<legend>#i18n{uploadimage.manage.option.crop}</legend>
-	<form class="form-horizontal" method="post" action="jsp/admin/plugins/uploadimage/ManageOptions.jsp">
-		<@messages errors=errors /> <@messages infos=infos />
-		<input  type="hidden" name="action" id="action" value="${action!}"/>
+<@uploadImage />
+<#macro uploadImage >
+<div class="container">
+    <legend>#i18n{uploadimage.manage.option.crop}</legend>
+    <form class="form-horizontal" method="post" action="jsp/admin/plugins/uploadimage/ManageOptions.jsp">
+        <@messages errors=errors /> <@messages infos=infos />
+        <input type="hidden" name="action" id="action" value="${action!}"/>
+
         <div class="">
-		<input  type="hidden" name="id_option" id="id_option" value="${option.id!}"/>
-          
-          <ul class="" role="menu" aria-labelledby="toggleOptions">
-            <li role="presentation">
-              <label class="checkbox-inline">
-		
-                <input type="checkbox" name="strict" value="true" <#if option.strict> checked </#if> > 
-                 <span class='badge' >strict</span> <small>#i18n{uploadimage.description.strict}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="responsive" value="true" <#if option.responsive> checked </#if> > 
-                 <span class='badge' >responsive</span> <small>#i18n{uploadimage.description.responsive}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="checkimageorigin" value="true" <#if option.checkImageOrigin> checked </#if> >
-                <span class='badge' >checkImageOrigin</span> <small>#i18n{uploadimage.description.checkImageOrigin}</small>
-              </label>
-            </li>
+            <input type="hidden" name="id_option" id="id_option" value="${option.id!}"/>
 
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="modal" value="true" <#if option.modal> checked </#if>> 
-                <span class='badge' >modal</span> <small>#i18n{uploadimage.description.modal}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="guides" value="true" <#if option.guides> checked </#if>> 
-                <span class='badge' >guides</span> <small>#i18n{uploadimage.description.guides}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="highlight" value="true" <#if option.highlight> checked </#if>> 
-                <span class='badge' >highlight</span> <small>#i18n{uploadimage.description.highlight}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="background" value="true" <#if option.background> checked </#if>> 
-                <span class='badge' >background</span> <small>#i18n{uploadimage.description.background}</small>
-              </label>
-            </li>
+            <ul class="" role="menu" aria-labelledby="toggleOptions">
+                <li role="presentation">
+                    <label class="checkbox-inline">
 
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="autocrop" value="true" <#if option.autoCrop> checked </#if>> 
-                <span class='badge' >autoCrop</span> <small>#i18n{uploadimage.description.autoCrop}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="dragcrop" value="true" <#if option.dragCrop> checked </#if>> 
-                <span class='badge' >dragCrop</span> <small>#i18n{uploadimage.description.dragCrop}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="movable" value="true" <#if option.movable> checked </#if>>
-                <span class='badge' >movable</span> <small>#i18n{uploadimage.description.movable}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="rotatable" value="true" <#if option.rotatable> checked </#if>>
-                <span class='badge' >rotatable</span> <small>#i18n{uploadimage.description.rotatable}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="zoomable" value="true" <#if option.zoomable> checked </#if>>
-                <span class='badge' >zoomable</span> <small>#i18n{uploadimage.description.zoomable}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="touchdragzoom" value="true" <#if option.touchDragZoom> checked </#if>>
-                <span class='badge' >touchDragZoom</span> <small>#i18n{uploadimage.description.touchDragZoom}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="mousewheelzoom" value="true" <#if option.mouseWheelZoom> checked </#if>> 
-                <span class='badge' >mouseWheelZoom</span> <small>#i18n{uploadimage.description.mouseWheelZoom}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="cropboxmovable" value="true" <#if option.cropBoxMovable> checked </#if>> 
-                <span class='badge' >cropBoxMovable</span> <small>#i18n{uploadimage.description.cropBoxMovable}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="cropboxresizable" value="true" <#if option.cropBoxResizable> checked </#if>>
-                <span class='badge' >cropBoxResizable</span> <small>#i18n{uploadimage.description.cropBoxResizable}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="doubleclicktoggle" value="true" <#if option.doubleClickToggle> checked </#if>> 
-                <span class='badge' >doubleClickToggle</span> <small>#i18n{uploadimage.description.doubleClickToggle}</small>
-              </label>
-            </li>
-          </ul>
-        </div><!-- /.dropdown -->
- <!-- <h3 class="page-header">Data:</h3> -->
+                        <input type="checkbox" name="strict" value="true" <#if option.strict> checked </#if> >
+                        <span class='badge'>strict</span>
+                        <small>#i18n{uploadimage.description.strict}</small>
+                    </label>
+                </li>
+                <li role="presentation">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="responsive" value="true" <#if option.responsive> checked </#if> >
+                        <span class='badge'>responsive</span>
+                        <small>#i18n{uploadimage.description.responsive}</small>
+                    </label>
+                </li>
+                <li role="presentation">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="checkimageorigin" value="true" <#if option.checkImageOrigin> checked </#if> >
+                        <span class='badge'>checkImageOrigin</span>
+                        <small>#i18n{uploadimage.description.checkImageOrigin}</small>
+                    </label>
+                </li>
+
+                <li role="presentation">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="modal" value="true" <#if option.modal> checked </#if>>
+                        <span class='badge'>modal</span>
+                        <small>#i18n{uploadimage.description.modal}</small>
+                    </label>
+                </li>
+                <li role="presentation">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="guides" value="true" <#if option.guides> checked </#if>>
+                        <span class='badge'>guides</span>
+                        <small>#i18n{uploadimage.description.guides}</small>
+                    </label>
+                </li>
+                <li role="presentation">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="highlight" value="true" <#if option.highlight> checked </#if>>
+                        <span class='badge'>highlight</span>
+                        <small>#i18n{uploadimage.description.highlight}</small>
+                    </label>
+                </li>
+                <li role="presentation">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="background" value="true" <#if option.background> checked </#if>>
+                        <span class='badge'>background</span>
+                        <small>#i18n{uploadimage.description.background}</small>
+                    </label>
+                </li>
+
+                <li role="presentation">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="autocrop" value="true" <#if option.autoCrop> checked </#if>>
+                        <span class='badge'>autoCrop</span>
+                        <small>#i18n{uploadimage.description.autoCrop}</small>
+                    </label>
+                </li>
+                <li role="presentation">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="dragcrop" value="true" <#if option.dragCrop> checked </#if>>
+                        <span class='badge'>dragCrop</span>
+                        <small>#i18n{uploadimage.description.dragCrop}</small>
+                    </label>
+                </li>
+                <li role="presentation">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="movable" value="true" <#if option.movable> checked </#if>>
+                        <span class='badge'>movable</span>
+                        <small>#i18n{uploadimage.description.movable}</small>
+                    </label>
+                </li>
+                <li role="presentation">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="rotatable" value="true" <#if option.rotatable> checked </#if>>
+                        <span class='badge'>rotatable</span>
+                        <small>#i18n{uploadimage.description.rotatable}</small>
+                    </label>
+                </li>
+                <li role="presentation">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="zoomable" value="true" <#if option.zoomable> checked </#if>>
+                        <span class='badge'>zoomable</span>
+                        <small>#i18n{uploadimage.description.zoomable}</small>
+                    </label>
+                </li>
+                <li role="presentation">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="touchdragzoom" value="true" <#if option.touchDragZoom> checked </#if>>
+                        <span class='badge'>touchDragZoom</span>
+                        <small>#i18n{uploadimage.description.touchDragZoom}</small>
+                    </label>
+                </li>
+                <li role="presentation">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="mousewheelzoom" value="true" <#if option.mouseWheelZoom> checked </#if>>
+                        <span class='badge'>mouseWheelZoom</span>
+                        <small>#i18n{uploadimage.description.mouseWheelZoom}</small>
+                    </label>
+                </li>
+                <li role="presentation">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="cropboxmovable" value="true" <#if option.cropBoxMovable> checked </#if>>
+                        <span class='badge'>cropBoxMovable</span>
+                        <small>#i18n{uploadimage.description.cropBoxMovable}</small>
+                    </label>
+                </li>
+                <li role="presentation">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="cropboxresizable" value="true" <#if option.cropBoxResizable> checked </#if>>
+                        <span class='badge'>cropBoxResizable</span>
+                        <small>#i18n{uploadimage.description.cropBoxResizable}</small>
+                    </label>
+                </li>
+                <li role="presentation">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="doubleclicktoggle" value="true" <#if option.doubleClickToggle> checked </#if>>
+                        <span class='badge'>doubleClickToggle</span>
+                        <small>#i18n{uploadimage.description.doubleClickToggle}</small>
+                    </label>
+                </li>
+            </ul>
+        </div>
+        <br>
         <div class="docs-data">
-          <div class="input-group">
-            <label class="input-group-addon" for="dataX">#i18n{uploadimage.option.X}</label>
-            <input class="form-control" id="dataX" type="number" placeholder="x" name="x" value="${option.x!}" required>
-            <span class="input-group-addon">px</span>
-          </div>
-          <div class="input-group">
-            <label class="input-group-addon" for="dataY">#i18n{uploadimage.option.Y}</label>
-            <input class="form-control" id="dataY"  type="number" placeholder="y" name="y" value="${option.y!}" required>
-            <span class="input-group-addon">px</span>
-          </div>
-          <div class="input-group">
-            <label class="input-group-addon" for="dataWidth">#i18n{uploadimage.option.Width}</label>
-            <input class="form-control" id="dataWidth" type="number" placeholder="width" name="width" value="${option.width!}" required>
-            <span class="input-group-addon">px</span>
-          </div>
-          <div class="input-group">
-            <label class="input-group-addon" for="dataHeight">#i18n{uploadimage.option.Height}</label>
-            <input class="form-control" id="dataHeight" type="number" placeholder="height" name="height" value="${option.height!}" required>
-            <span class="input-group-addon">px</span>
-          </div>
-          <div class="input-group">
-            <label class="input-group-addon" for="dataRatio">#i18n{uploadimage.option.Ratio}</label>
-            <input class="form-control" id="dataRatio" type="text" placeholder="16/9" name="ratio" value="${option.ratio!}" pattern="[0-9]+[/][0-9]+" title="Number/Number" required>
-            <span class="input-group-addon">w/h</span>
-          </div>
-          <div class="input-group">
-            <label class="input-group-addon" for="dataFieldName">#i18n{uploadimage.option.FieldName}</label>
-            <input class="form-control" id="dataFieldName" type="text" placeholder="fieldName" name="fieldName" value="${option.fieldName!}" pattern="[a-zA-Z0-9]+" title="Alpha-Numeric" required>
-            <span class="input-group-addon">string</span>
-          </div>
-          	 <div class="container">
-				<input class="btn btn-primary" value="#i18n{uploadimage.button.submit}" type="submit"/>
-				<a class="btn btn-primary" href="javascript:history.go(-1)">#i18n{uploadimage.button.retour}</a>
-  			</div>
+            <div class="input-group">
+                <label class="input-group-addon" for="dataX">#i18n{uploadimage.option.X}</label>
+                <input class="form-control" id="dataX" type="number" placeholder="x" name="x" value="${option.x!}" required>
+                <span class="input-group-addon">px</span>
+            </div>
+            <div class="input-group">
+                <label class="input-group-addon" for="dataY">#i18n{uploadimage.option.Y}</label>
+                <input class="form-control" id="dataY" type="number" placeholder="y" name="y" value="${option.y!}" required>
+                <span class="input-group-addon">px</span>
+            </div>
+            <div class="input-group">
+                <label class="input-group-addon" for="dataWidth">#i18n{uploadimage.option.Width}</label>
+                <input class="form-control" id="dataWidth" type="number" placeholder="width" name="width" value="${option.width!}" required>
+                <span class="input-group-addon">px</span>
+            </div>
+            <div class="input-group">
+                <label class="input-group-addon" for="dataHeight">#i18n{uploadimage.option.Height}</label>
+                <input class="form-control" id="dataHeight" type="number" placeholder="height" name="height" value="${option.height!}" required>
+                <span class="input-group-addon">px</span>
+            </div>
+            <div class="input-group">
+                <label class="input-group-addon" for="dataRatio">#i18n{uploadimage.option.Ratio}</label>
+                <input class="form-control" id="dataRatio" type="text" placeholder="16/9" name="ratio" value="${option.ratio!}" pattern="[0-9]+[/][0-9]+" title="Number/Number" required>
+                <span class="input-group-addon">w/h</span>
+            </div>
+            <div class="input-group">
+                <label class="input-group-addon" for="dataMaxHeight">#i18n{uploadimage.option.maxHeight}</label>
+                <input class="form-control" id="dataMaxHeight" type="number" placeholder="maxHeight" name="maxHeight" value="${option.maxHeight!}" required>
+                <span class="input-group-addon">px</span>
+            </div>
+            <div class="input-group">
+                <label class="input-group-addon" for="dataFieldName">#i18n{uploadimage.option.FieldName}</label>
+                <input class="form-control" id="dataFieldName" type="text" placeholder="fieldName" name="fieldName" value="${option.fieldName!}" pattern="[a-zA-Z0-9]+" title="Alpha-Numeric" required>
+                <span class="input-group-addon">string</span>
+            </div>
+            <br>
+            <div class="container">
+                <input class="btn btn-primary" value="#i18n{uploadimage.button.submit}" type="submit"/>
+                <a class="btn btn-primary" href="javascript:history.go(-1)">#i18n{uploadimage.button.retour}</a>
+            </div>
         </div>
 
-  </form>
-  </div>
-  </#macro>
+    </form>
+</div>
+</#macro>
