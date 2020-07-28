@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2015, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -7,15 +7,15 @@
  * are met:
  *
  *  1. Redistributions of source code must retain the above copyright notice
- *	 and the following disclaimer.
+ *     and the following disclaimer.
  *
  *  2. Redistributions in binary form must reproduce the above copyright notice
- *	 and the following disclaimer in the documentation and/or other materials
- *	 provided with the distribution.
+ *     and the following disclaimer in the documentation and/or other materials
+ *     provided with the distribution.
  *
  *  3. Neither the name of 'Mairie de Paris' nor 'Lutece' nor the names of its
- *	 contributors may be used to endorse or promote products derived from
- *	 this software without specific prior written permission.
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -31,7 +31,6 @@
  *
  * License 1.0
  */
- 
 package fr.paris.lutece.plugins.uploadimage.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
@@ -53,14 +52,16 @@ public final class OptionsHome
     /**
      * Private constructor - this class need not be instantiated
      */
-    private OptionsHome(  )
+    private OptionsHome( )
     {
     }
 
     /**
      * Create an instance of the options class
-     * @param options The instance of the Options which contains the informations to store
-     * @return The  instance of options which has been created with its primary key.
+     * 
+     * @param options
+     *            The instance of the Options which contains the informations to store
+     * @return The instance of options which has been created with its primary key.
      */
     public static Options create( Options options )
     {
@@ -71,8 +72,10 @@ public final class OptionsHome
 
     /**
      * Update of the options which is specified in parameter
-     * @param options The instance of the Options which contains the data to store
-     * @return The instance of the  options which has been updated
+     * 
+     * @param options
+     *            The instance of the Options which contains the data to store
+     * @return The instance of the options which has been updated
      */
     public static Options update( Options options )
     {
@@ -83,7 +86,9 @@ public final class OptionsHome
 
     /**
      * Remove the options whose identifier is specified in parameter
-     * @param nKey The options Id
+     * 
+     * @param nKey
+     *            The options Id
      */
     public static void remove( int nKey )
     {
@@ -95,35 +100,41 @@ public final class OptionsHome
 
     /**
      * Returns an instance of a options whose identifier is specified in parameter
-     * @param nKey The options primary key
+     * 
+     * @param nKey
+     *            The options primary key
      * @return an instance of Options
      */
     public static Options findByPrimaryKey( int nKey )
     {
-        return _dao.load( nKey, _plugin);
+        return _dao.load( nKey, _plugin );
     }
-    
+
     /**
      * Returns an instance of a options whose field name is specified in parameter
-     * @param nKey The options primary key
+     * 
+     * @param nKey
+     *            The options primary key
      * @return an instance of Options
      */
     public static Options findByFieldName( String fieldName )
     {
-        return _dao.loadOptionByFieldName(fieldName, _plugin);
+        return _dao.loadOptionByFieldName( fieldName, _plugin );
     }
 
     /**
      * Load the data of all the options objects and returns them in form of a collection
+     * 
      * @return the collection which contains the data of all the options objects
      */
     public static Collection<Options> getOptionssList( )
     {
         return _dao.selectOptionssList( _plugin );
     }
-    
+
     /**
      * Load the id of all the options objects and returns them in form of a collection
+     * 
      * @return the collection which contains the id of all the options objects
      */
     public static Collection<Integer> getIdOptionssList( )
@@ -131,4 +142,3 @@ public final class OptionsHome
         return _dao.selectIdOptionssList( _plugin );
     }
 }
-

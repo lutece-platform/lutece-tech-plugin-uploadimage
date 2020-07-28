@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2015, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,47 +31,45 @@
  *
  * License 1.0
  */
-
 package fr.paris.lutece.plugins.uploadimage.business;
 
 import fr.paris.lutece.test.LuteceTestCase;
 
-
 public class OptionsBusinessTest extends LuteceTestCase
 {
-	private final static boolean STRICT1 = true;
+    private final static boolean STRICT1 = true;
     private final static boolean STRICT2 = false;
-	private final static boolean RESPONSIVE1 = true;
+    private final static boolean RESPONSIVE1 = true;
     private final static boolean RESPONSIVE2 = false;
-	private final static boolean CHECKIMAGEORIGIN1 = true;
+    private final static boolean CHECKIMAGEORIGIN1 = true;
     private final static boolean CHECKIMAGEORIGIN2 = false;
-	private final static boolean MODAL1 = true;
+    private final static boolean MODAL1 = true;
     private final static boolean MODAL2 = false;
-	private final static boolean GUIDES1 = true;
+    private final static boolean GUIDES1 = true;
     private final static boolean GUIDES2 = false;
-	private final static boolean HIGHLIGHT1 = true;
+    private final static boolean HIGHLIGHT1 = true;
     private final static boolean HIGHLIGHT2 = false;
-	private final static boolean BACKGROUND1 = true;
+    private final static boolean BACKGROUND1 = true;
     private final static boolean BACKGROUND2 = false;
-	private final static boolean AUTOCROP1 = true;
+    private final static boolean AUTOCROP1 = true;
     private final static boolean AUTOCROP2 = false;
-	private final static boolean DRAGCROP1 = true;
+    private final static boolean DRAGCROP1 = true;
     private final static boolean DRAGCROP2 = false;
-	private final static boolean MOVABLE1 = true;
+    private final static boolean MOVABLE1 = true;
     private final static boolean MOVABLE2 = false;
-	private final static boolean ROTATABLE1 = true;
+    private final static boolean ROTATABLE1 = true;
     private final static boolean ROTATABLE2 = false;
-	private final static boolean ZOOMABLE1 = true;
+    private final static boolean ZOOMABLE1 = true;
     private final static boolean ZOOMABLE2 = false;
-	private final static boolean TOUCHDRAGZOOM1 = true;
+    private final static boolean TOUCHDRAGZOOM1 = true;
     private final static boolean TOUCHDRAGZOOM2 = false;
-	private final static boolean MOUSEWHEELZOOM1 = true;
+    private final static boolean MOUSEWHEELZOOM1 = true;
     private final static boolean MOUSEWHEELZOOM2 = false;
-	private final static boolean CROPBOXMOVABLE1 = true;
+    private final static boolean CROPBOXMOVABLE1 = true;
     private final static boolean CROPBOXMOVABLE2 = false;
-	private final static boolean CROPBOXRESIZABLE1 = true;
+    private final static boolean CROPBOXRESIZABLE1 = true;
     private final static boolean CROPBOXRESIZABLE2 = false;
-	private final static boolean DOUBLECLICKTOGGLE1 = true;
+    private final static boolean DOUBLECLICKTOGGLE1 = true;
     private final static boolean DOUBLECLICKTOGGLE2 = false;
     private final static int WIDTH1 = 1;
     private final static int WIDTH2 = 2;
@@ -83,11 +81,12 @@ public class OptionsBusinessTest extends LuteceTestCase
     private final static int Y2 = 2;
     private final static String ROTATE1 = "Rotate1";
     private final static String ROTATE2 = "Rotate2";
+    private final static String FIELDNAME = "fieldName";
 
-    public void testBusiness(  )
+    public void testBusiness( )
     {
         // Initialize an object
-        Options options = new Options();
+        Options options = new Options( );
         options.setStrict( STRICT1 );
         options.setResponsive( RESPONSIVE1 );
         options.setCheckImageOrigin( CHECKIMAGEORIGIN1 );
@@ -110,32 +109,33 @@ public class OptionsBusinessTest extends LuteceTestCase
         options.setX( X1 );
         options.setY( Y1 );
         options.setRatio( ROTATE1 );
+        options.setFieldName( FIELDNAME );
 
         // Create test
         OptionsHome.create( options );
         Options optionsStored = OptionsHome.findByPrimaryKey( options.getId( ) );
-        assertEquals( optionsStored.getStrict() , options.getStrict( ) );
-        assertEquals( optionsStored.getResponsive() , options.getResponsive( ) );
-        assertEquals( optionsStored.getCheckImageOrigin() , options.getCheckImageOrigin( ) );
-        assertEquals( optionsStored.getModal() , options.getModal( ) );
-        assertEquals( optionsStored.getGuides() , options.getGuides( ) );
-        assertEquals( optionsStored.getHighlight() , options.getHighlight( ) );
-        assertEquals( optionsStored.getBackground() , options.getBackground( ) );
-        assertEquals( optionsStored.getAutoCrop() , options.getAutoCrop( ) );
-        assertEquals( optionsStored.getDragCrop() , options.getDragCrop( ) );
-        assertEquals( optionsStored.getMovable() , options.getMovable( ) );
-        assertEquals( optionsStored.getRotatable() , options.getRotatable( ) );
-        assertEquals( optionsStored.getZoomable() , options.getZoomable( ) );
-        assertEquals( optionsStored.getTouchDragZoom() , options.getTouchDragZoom( ) );
-        assertEquals( optionsStored.getMouseWheelZoom() , options.getMouseWheelZoom( ) );
-        assertEquals( optionsStored.getCropBoxMovable() , options.getCropBoxMovable( ) );
-        assertEquals( optionsStored.getCropBoxResizable() , options.getCropBoxResizable( ) );
-        assertEquals( optionsStored.getDoubleClickToggle() , options.getDoubleClickToggle( ) );
-        assertEquals( optionsStored.getWidth() , options.getWidth( ) );
-        assertEquals( optionsStored.getHeight() , options.getHeight( ) );
-        assertEquals( optionsStored.getX() , options.getX( ) );
-        assertEquals( optionsStored.getY() , options.getY( ) );
-        assertEquals( optionsStored.getRatio() , options.getRatio( ) );
+        assertEquals( optionsStored.getStrict( ), options.getStrict( ) );
+        assertEquals( optionsStored.getResponsive( ), options.getResponsive( ) );
+        assertEquals( optionsStored.getCheckImageOrigin( ), options.getCheckImageOrigin( ) );
+        assertEquals( optionsStored.getModal( ), options.getModal( ) );
+        assertEquals( optionsStored.getGuides( ), options.getGuides( ) );
+        assertEquals( optionsStored.getHighlight( ), options.getHighlight( ) );
+        assertEquals( optionsStored.getBackground( ), options.getBackground( ) );
+        assertEquals( optionsStored.getAutoCrop( ), options.getAutoCrop( ) );
+        assertEquals( optionsStored.getDragCrop( ), options.getDragCrop( ) );
+        assertEquals( optionsStored.getMovable( ), options.getMovable( ) );
+        assertEquals( optionsStored.getRotatable( ), options.getRotatable( ) );
+        assertEquals( optionsStored.getZoomable( ), options.getZoomable( ) );
+        assertEquals( optionsStored.getTouchDragZoom( ), options.getTouchDragZoom( ) );
+        assertEquals( optionsStored.getMouseWheelZoom( ), options.getMouseWheelZoom( ) );
+        assertEquals( optionsStored.getCropBoxMovable( ), options.getCropBoxMovable( ) );
+        assertEquals( optionsStored.getCropBoxResizable( ), options.getCropBoxResizable( ) );
+        assertEquals( optionsStored.getDoubleClickToggle( ), options.getDoubleClickToggle( ) );
+        assertEquals( optionsStored.getWidth( ), options.getWidth( ) );
+        assertEquals( optionsStored.getHeight( ), options.getHeight( ) );
+        assertEquals( optionsStored.getX( ), options.getX( ) );
+        assertEquals( optionsStored.getY( ), options.getY( ) );
+        assertEquals( optionsStored.getRatio( ), options.getRatio( ) );
 
         // Update test
         options.setStrict( STRICT2 );
@@ -162,37 +162,37 @@ public class OptionsBusinessTest extends LuteceTestCase
         options.setRatio( ROTATE2 );
         OptionsHome.update( options );
         optionsStored = OptionsHome.findByPrimaryKey( options.getId( ) );
-        assertEquals( optionsStored.getStrict() , options.getStrict( ) );
-        assertEquals( optionsStored.getResponsive() , options.getResponsive( ) );
-        assertEquals( optionsStored.getCheckImageOrigin() , options.getCheckImageOrigin( ) );
-        assertEquals( optionsStored.getModal() , options.getModal( ) );
-        assertEquals( optionsStored.getGuides() , options.getGuides( ) );
-        assertEquals( optionsStored.getHighlight() , options.getHighlight( ) );
-        assertEquals( optionsStored.getBackground() , options.getBackground( ) );
-        assertEquals( optionsStored.getAutoCrop() , options.getAutoCrop( ) );
-        assertEquals( optionsStored.getDragCrop() , options.getDragCrop( ) );
-        assertEquals( optionsStored.getMovable() , options.getMovable( ) );
-        assertEquals( optionsStored.getRotatable() , options.getRotatable( ) );
-        assertEquals( optionsStored.getZoomable() , options.getZoomable( ) );
-        assertEquals( optionsStored.getTouchDragZoom() , options.getTouchDragZoom( ) );
-        assertEquals( optionsStored.getMouseWheelZoom() , options.getMouseWheelZoom( ) );
-        assertEquals( optionsStored.getCropBoxMovable() , options.getCropBoxMovable( ) );
-        assertEquals( optionsStored.getCropBoxResizable() , options.getCropBoxResizable( ) );
-        assertEquals( optionsStored.getDoubleClickToggle() , options.getDoubleClickToggle( ) );
-        assertEquals( optionsStored.getWidth() , options.getWidth( ) );
-        assertEquals( optionsStored.getHeight() , options.getHeight( ) );
-        assertEquals( optionsStored.getX() , options.getX( ) );
-        assertEquals( optionsStored.getY() , options.getY( ) );
-        assertEquals( optionsStored.getRatio() , options.getRatio( ) );
+        assertEquals( optionsStored.getStrict( ), options.getStrict( ) );
+        assertEquals( optionsStored.getResponsive( ), options.getResponsive( ) );
+        assertEquals( optionsStored.getCheckImageOrigin( ), options.getCheckImageOrigin( ) );
+        assertEquals( optionsStored.getModal( ), options.getModal( ) );
+        assertEquals( optionsStored.getGuides( ), options.getGuides( ) );
+        assertEquals( optionsStored.getHighlight( ), options.getHighlight( ) );
+        assertEquals( optionsStored.getBackground( ), options.getBackground( ) );
+        assertEquals( optionsStored.getAutoCrop( ), options.getAutoCrop( ) );
+        assertEquals( optionsStored.getDragCrop( ), options.getDragCrop( ) );
+        assertEquals( optionsStored.getMovable( ), options.getMovable( ) );
+        assertEquals( optionsStored.getRotatable( ), options.getRotatable( ) );
+        assertEquals( optionsStored.getZoomable( ), options.getZoomable( ) );
+        assertEquals( optionsStored.getTouchDragZoom( ), options.getTouchDragZoom( ) );
+        assertEquals( optionsStored.getMouseWheelZoom( ), options.getMouseWheelZoom( ) );
+        assertEquals( optionsStored.getCropBoxMovable( ), options.getCropBoxMovable( ) );
+        assertEquals( optionsStored.getCropBoxResizable( ), options.getCropBoxResizable( ) );
+        assertEquals( optionsStored.getDoubleClickToggle( ), options.getDoubleClickToggle( ) );
+        assertEquals( optionsStored.getWidth( ), options.getWidth( ) );
+        assertEquals( optionsStored.getHeight( ), options.getHeight( ) );
+        assertEquals( optionsStored.getX( ), options.getX( ) );
+        assertEquals( optionsStored.getY( ), options.getY( ) );
+        assertEquals( optionsStored.getRatio( ), options.getRatio( ) );
 
         // List test
-        OptionsHome.getOptionssList();
+        OptionsHome.getOptionssList( );
 
         // Delete test
         OptionsHome.remove( options.getId( ) );
         optionsStored = OptionsHome.findByPrimaryKey( options.getId( ) );
         assertNull( optionsStored );
-        
+
     }
 
 }
