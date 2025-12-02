@@ -41,7 +41,6 @@ import fr.paris.lutece.plugins.uploadimage.business.OptionsHome;
 import fr.paris.lutece.plugins.uploadimage.service.UploadImageCacheService;
 import fr.paris.lutece.portal.web.xpages.XPage;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
-import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.util.mvc.xpage.MVCApplication;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.View;
 import fr.paris.lutece.portal.util.mvc.xpage.annotations.Controller;
@@ -49,7 +48,7 @@ import fr.paris.lutece.util.html.HtmlTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.util.*;
 
 /**
  * This class provides a simple implementation of an XPage
@@ -109,7 +108,7 @@ public class UploadimageApp extends MVCApplication
         // {
 	    	 Map<String, Object> model = new HashMap<String, Object>(  );
 	    	 model.put( "MARK_BASE_URL"," strBaseUrl" );
-	    	 model.put("option", option);
+	    	 model.put("cropperOption", option);
 	    	 model.put(MARK_FIELDNAME, strFieldname);
 	    	 
 	         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MAIN_UPLOAD_IMAGE_JS, request.getLocale(  ),

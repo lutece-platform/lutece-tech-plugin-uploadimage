@@ -65,7 +65,7 @@ public  class ManageUploadimageJspBean extends MVCAdminJspBean
     private static final String MARK_PAGINATOR = "paginator";
     private static final String MARK_NB_ITEMS_PER_PAGE = "nb_items_per_page";
     private static final String MARK_LIST_OPTIONS = "list_options";
-    private static final String TEMPLATE_MANAGE_UPLOAD_IMAGE= "/admin/plugins/uploadimage/manageuploadimage_tabs.html";
+    private static final String TEMPLATE_MANAGE_UPLOAD_IMAGE= "/admin/plugins/uploadimage/manage_uploadimage.html";
     private static final String TEMPLATE_MANAGE_VIEW_OPTION= "/admin/plugins/uploadimage/manage_option.html";
     private static final String JSP_MANAGE_OPTIONS= "jsp/admin/plugins/uploadimage/ManageUploadimage.jsp";
     private static final String JSP_DO_REMOVE_OPTION= "jsp/admin/plugins/uploadimage/DoRemoveOptions.jsp";
@@ -230,7 +230,7 @@ public  class ManageUploadimageJspBean extends MVCAdminJspBean
 	   }
 	   
 	   Map<String, Object> model = getModel(  );
-	   model.put("option", option);  
+	   model.put("cropperOption", option);  
 	   model.put("action", "modify_option");
 	   
 	   
@@ -253,7 +253,7 @@ public  class ManageUploadimageJspBean extends MVCAdminJspBean
 		   option.setRatio("16/9");   
 	   }
 	   Map<String, Object> model = getModel(  );
-	   model.put("option", option);  
+	   model.put("cropperOption", option);  
 	   model.put("action", strAction);
 	   HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_VIEW_OPTION, request.getLocale(  ),
                model );

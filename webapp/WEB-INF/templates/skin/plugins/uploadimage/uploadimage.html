@@ -1,145 +1,261 @@
-
 <#macro addRequiredJsUploadImages>
-	<link rel="stylesheet" href="css/plugins/uploadimage/main.css" />
-	<link rel="stylesheet" href="css/plugins/uploadimage/cropper.css" />
-	<script type="text/javascript" src="js/plugins/uploadimage/cropper.js" ></script>
+<link rel="stylesheet" href="css/plugins/uploadimage/main.css" />
+<link rel="stylesheet" href="css/plugins/uploadimage/cropper.css" />
+<script src="js/plugins/uploadimage/cropper.js"></script>
 </#macro>
-<#macro cropimage  fieldName	file  cssClass synchronous >
-
-
-  <!-- Content -->
-  <div id="content_upload_image"  class="">
-    <div id="row1"  class="row">
-      <div class="col-xs-8 col-md-16">
-        <!-- <h3 class="page-header">Demo:</h3> -->
-	 <label id="label${fieldName}" class="btn btn-primary btn-upload" for="inputImage${fieldName}" title="#i18n{uploadimage.model.title.upload}" <#if file !="" > style='display:none' </#if>>
-            <input class="sr-only" id="inputImage${fieldName}" name="file" type="file" accept="image/*">
-            <span class="docs-tooltip" data-toggle="tooltip" title="#i18n{uploadimage.model.title.upload.tooltip}">
-              <span class="icon icon-upload"></span> #i18n{uploadimage.model.upload.button} 
-            </span>
-	 </label>
-        <div id="img_div"  class="img-container${fieldName} ${cssClass!}">
-          <image id="img_file"  src="${file!}" alt="" class="">
-        </div>
-     </div>
-    <div id="row2" class="row">
-      <div id= "buttonOption${fieldName}" class="col-md-9 docs-buttons" <#if file =="" > style='display:none' </#if>>
-        <!-- <h3 class="page-header">Toolbar:</h3> -->	
-        <div id="buttonOption" class="btn-group" >
-	        
-         <!-- <button id="crop" class="btn btn-primary" data-method="setDragMode" data-option="crop" type="button" title="#i18n{uploadimage.model.title.crop}">
-            <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;setDragMode&quot;, &quot;crop&quot;)">
-              <span class="icon icon-crop"></span>
-            </span>
-          </button> -->
-		<!-- <button id="move" class="btn btn-primary" data-method="setDragMode" onClick="move('${fieldName}')" type="button" title="#i18n{uploadimage.model.title.move}">
-            <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;setDragMode&quot;, &quot;move&quot;)">
-              <span class="icon icon-move"></span>
-            </span>
-        </button> -->
-          <button  id="zoom_in" class="btn btn-primary" onClick="zoomIn('${fieldName}')" type="button" title="#i18n{uploadimage.model.title.zoom_in}">
-            <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;zoom&quot;, 0.1)">
-              <span class="icon icon-zoom-in"></span>
-            </span>
-          </button>
-          <button id="zoom_out" class="btn btn-primary" onClick="zoomOut('${fieldName}')" type="button" title="#i18n{uploadimage.model.title.zoom_out}">
-            <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;zoom&quot;, -0.1)">
-              <span class="icon icon-zoom-out"></span>
-            </span>
-          </button>
-          <button id="rotate_left" class="btn btn-primary" onClick="rotate('${fieldName}', -45)" type="button" title="#i18n{uploadimage.model.title.rotate_left}">
-            <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;rotate&quot;, -45)">
-              <span class="icon icon-rotate-left"></span>
-            </span>
-          </button>
-          <button id="rotate_right" class="btn btn-primary" onClick="rotate('${fieldName}', 45)" type="button" title="#i18n{uploadimage.model.title.rotate_right}">
-            <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;rotate&quot;, 45)">
-              <span class="icon icon-rotate-right"></span>
-            </span>
-          </button>
-
-        </div>
-	
-        <div id="buttons" class="btn-group">
-
-          <button id="crop" class="btn btn-primary" onClick="cropBox('${fieldName}')"  type="button" title="#i18n{uploadimage.model.title.crop}">
-            <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;crop&quot;)">
-              <span class="icon icon-crop"></span>
-            </span>
-          </button>
-          <button id="clear" class="btn btn-primary" onClick="clearBox('${fieldName}')" type="button" title="#i18n{uploadimage.model.title.clear}">
-            <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;clear&quot;)">
-              <span class="icon icon-remove"></span>
-            </span>
-          </button>   
-          <button id="reset" class="btn btn-primary" onClick="resetBox('${fieldName}')" type="button" title="#i18n{uploadimage.model.title.reset}">
-            <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;reset&quot;)">
-              <span class="icon icon-refresh"></span>
-            </span>
-          </button>
-          <label id="upload"  class="btn btn-primary" for="inputImage${fieldName}" title="#i18n{uploadimage.model.title.upload}">
-            <input class="sr-only" id="inputImage${fieldName}" name="file" type="file" accept="image/*">
-            <span class="docs-tooltip" data-toggle="tooltip" title="#i18n{uploadimage.model.title.upload.tooltip}">
-              <span class="icon icon-upload"></span> #i18n{uploadimage.model.upload.button}
-            </span>
-          </label>
-         
-        </div>
-	<!--<div class="btn-group">
-
-	 <button id="destroy" class="btn btn-primary" data-method="destroy" type="button" title="Destroy" style="visibility:hidden;">
-            <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;destroy&quot;)">
-              <span class="icon icon-off"></span>
-            </span>
-          </button>
-	   <button id="disabled" class="btn btn-primary" data-method="disable" type="button" title="Disable" style="visibility:hidden;">
-            <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;disable&quot;)">
-              <span class="icon icon-lock"></span>
-            </span>
-          </button>
-          <button id="enable"  class="btn btn-primary" data-method="enable" type="button" title="Enable" style="visibility:hidden;">
-            <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;enable&quot;)">
-              <span class="icon icon-unlock"></span>
-            </span>
-          </button>
-	</div> -->
-
-        <div id="crp_canvas" class="btn-group">
-          <button  id="crp_button_canvas" class="btn btn-primary" onClick="getCroppedCanva('${fieldName}')" type="button">
-            <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper${fieldName}(&quot;getCroppedCanvas&quot;)">
-              #i18n{uploadimage.model.get.cropped.canvas}
-            </span>
-          </button>
-          <!-- <button id="id_crop_canvas" class="btn btn-primary" onClick="getCanvasWithParam('${fieldName}',{ width: 160, height: 90 } )"  type="button">
-            <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;getCroppedCanvas&quot;, { width: 160, height: 90 })">
-              160&times;90
-            </span>
-          </button>
-          <button class="btn btn-primary"  onClick="getCanvasWithParam('${fieldName}',{ width: 320, height: 180 } )" type="button">
-            <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;getCroppedCanvas&quot;, { width: 320, height: 180 })">
-              320&times;180
-            </span>
-          </button> -->
-        </div>
-	<div id="row3" class="row">
-		<input id="imagesrc${fieldName}" name="${fieldName}" type="hidden" value="" />	
-		<button id="deleteButton${fieldName}" class="btn btn-default" onClick="deleteImage('${fieldName}')" type="button" title="#i18n{uploadimage.model.delete.button}" style="display:none">
-		      <span class="glyphicon glyphicon-remove-circle"></span> #i18n{uploadimage.model.delete.button}
-		</button>
-		<div style="max-width: 5px;" id="canvasImage${fieldName}"></div>
-	</div>	
-      </div><!-- /.docs-toggles -->
-    </div>
-  </div>
+<#macro cropimage fieldName file cssClass synchronous >
+<!-- Content -->
+<div id="content_upload_image m-3">
+	<div class="row">
+		<div class="col-10 col-sm-9">
+			<label id="label${fieldName}" class="btn btn-primary btn-upload" for="inputImage${fieldName}" title="#i18n{uploadimage.model.title.upload}" <#if file !="" > style='display:none' </#if>>
+				<input class="sr-only" id="inputImage${fieldName}" name="file" type="file" accept="image/*">
+				<span class="docs-tooltip" data-toggle="tooltip" title="#i18n{uploadimage.model.title.upload.tooltip}">
+					<span class="icon icon-upload"></span> #i18n{uploadimage.model.upload.button} 
+				</span>
+			</label>
+			<div id="img_div" class="img-container${fieldName} ${cssClass!}">
+				<img id="img_file" src="${file!}" alt="" class="img-fluid">
+			</div>
+		</div>
+		<div class="col-2 col-sm-3">
+			<label for="dataWidth">Largeur</label>
+			<input type="text" class="form-control" id="dataWidth${fieldName}">
+			<label for="dataWidth">Hauteur </label>
+			<input type="text" class="form-control" id="dataHeight${fieldName}">
+				<!-- Alert -->
+			<div class="docs-alert"><span class="warning message"></span></div>
+			<hr>
+			<button type="button" class="btn btn-info mb-2 w-100" data-method="setData" data-width="1170" data-option="{ &quot;width&quot;:1170,&quot;height&quot;:415}">
+				<span class="docs-tooltip" data-toggle="tooltip" title="Cropper taille image Ent�te"><span class="icon icon-crop"></span> Entete</span>
+			</button>
+			<button type="button" class="btn btn-info mb-2 w-100" data-method="setData" data-width="1170" data-option="{ &quot;width&quot;:1170,&quot;height&quot;:280}">
+				<span class="docs-tooltip" data-toggle="tooltip" title="Cropper taille image Entee"> <span class="icon icon-crop"></span> Carrousel Colonne 1</span>
+			</button>
+			<button type="button" class="btn btn-info mb-2 w-100" data-method="setData" data-width="670" data-option="{ &quot;width&quot;:670,&quot;height&quot;:280}">
+				<span class="docs-tooltip" data-toggle="tooltip" title="Cropper taille image Player"> <span class="icon icon-crop"></span> Carrousel Colonne 2</span>
+			</button>
+			<button type="button" class="btn btn-info mb-2 w-100" data-method="setData" data-width="470" data-option="{ &quot;width&quot;:470,&quot;height&quot;:240}">
+				<span class="docs-tooltip" data-toggle="tooltip" title="Cropper taille image Player"> <span class="icon icon-crop"></span> Carrousel Colonne 3</span>
+			</button>
+			<button type="button" class="btn btn-info mb-2 w-100" data-method="setData" data-width="470" data-option="{ &quot;width&quot;:205,&quot;height&quot;:205}">
+				<span class="docs-tooltip" data-toggle="tooltip" title="Cropper taille image Zoom"> <span class="icon icon-crop"></span> Zoom</span>
+			</button>
+		</div>
+	</div>
+	<div class="row mt-3" >
+		<div id="buttonOption${fieldName}" class="col docs-buttons"<#if file =''> style="display:none"</#if>>
+			<div class="btn-toolbar justify-content-around" >
+				<button  id="zoom_in" class="btn btn-primary" onClick="zoomIn('${fieldName}')" type="button" title="#i18n{uploadimage.model.title.zoom_in}">
+					<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;zoom&quot;, 0.1)">
+						<span class="icon icon-zoom-in"></span>
+					</span>
+				</button>
+				<button id="zoom_out" class="btn btn-primary" onClick="zoomOut('${fieldName}')" type="button" title="#i18n{uploadimage.model.title.zoom_out}">
+					<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;zoom&quot;, -0.1)">
+						<span class="icon icon-zoom-out"></span>
+					</span>
+				</button>
+				<button id="rotate_left" class="btn btn-primary" onClick="rotate('${fieldName}', -45)" type="button" title="#i18n{uploadimage.model.title.rotate_left}">
+					<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;rotate&quot;, -45)">
+						<span class="icon icon-rotate-left"></span>
+					</span>
+				</button>
+				<button id="rotate_right" class="btn btn-primary" onClick="rotate('${fieldName}', 45)" type="button" title="#i18n{uploadimage.model.title.rotate_right}">
+					<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;rotate&quot;, 45)">
+						<span class="icon icon-rotate-right"></span>
+					</span>
+				</button>
+				<button id="crop" class="btn btn-primary" onClick="cropBox('${fieldName}')"  type="button" title="Afficher Crop">
+					<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;crop&quot;)">
+						<span class="icon icon-crop"></span>
+					</span>
+				</button>
+				<button id="clear" class="btn btn-primary" onClick="clearBox('${fieldName}')" type="button" title="#i18n{uploadimage.model.title.clear} Crop">
+					<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;clear&quot;)">
+						<span class="icon icon-remove"></span>
+					</span>
+				</button>   
+				<button id="reset" class="btn btn-primary" onClick="resetBox('${fieldName}')" type="button" title="#i18n{uploadimage.model.title.reset}">
+					<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;reset&quot;)">
+						<span class="icon icon-refresh"></span>
+					</span>
+				</button>
+				<label id="upload"  class="btn btn-primary" for="inputImage${fieldName}" title="#i18n{uploadimage.model.title.upload}">
+					<input class="sr-only" id="inputImage${fieldName}" name="file" type="file" accept="image/*">
+					<span class="docs-tooltip" data-toggle="tooltip" title="#i18n{uploadimage.model.title.upload.tooltip}">
+					<span class="icon icon-upload"></span> Choisir un fichier sur son poste</span>
+				</label>
+				<button id="destroy" class="btn btn-primary" data-method="destroy" type="button" title="Destroy" style="visibility:hidden;">
+					<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;destroy&quot;)">
+						<span class="icon icon-off"></span>
+					</span>
+				</button>
+				<button id="disabled" class="btn btn-primary" data-method="disable" type="button" title="Disable" style="visibility:hidden;">
+					<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;disable&quot;)">
+						<span class="icon icon-lock"></span>
+					</span>
+				</button>
+				<button id="enable"  class="btn btn-primary" data-method="enable" type="button" title="Enable" style="visibility:hidden;">
+					<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;enable&quot;)">
+						<span class="icon icon-unlock"></span>
+					</span>
+				</button>
+				<button id="crp_button_canvas" class="btn btn-primary px-5" onClick="getCroppedCanva('${fieldName}' )" type="button">
+					<span class="docs-tooltip  px-5" data-toggle="tooltip" title="#i18n{uploadimage.model.get.cropped.image}">
+						<i class="fa fa-plus"></i> Ajouter l'image
+					</span>
+					<input id="imagesrc${fieldName}" name="${fieldName}" type="hidden" value="" />	
+				</button>
+				<button id="deleteButton${fieldName}" class="btn btn-default" onClick="deleteImage('${fieldName}')" type="button" title="#i18n{uploadimage.model.delete.button}" style="display:none">
+					<span class="fa fa-trash"></span> #i18n{uploadimage.model.delete.button}
+				</button>
+				<div style="max-width: 5px;" id="canvasImage${fieldName}"></div>
+			</div>	
+		</div>	
+	</div>
+</div>
+<!-- /.docs-toggles -->
+<!-- Scripts -->
+<script src="jsp/site/plugins/uploadimage/GetMainUploadJs.jsp?fieldName=${fieldName}" ></script>
+<script>
+$( function(){
+  'use strict';
+  var $dataHeight = $('#dataHeight${fieldName}').val();
+  var $dataWidth = $('#dataWidth${fieldName}').val();
+	if('${synchronous}'==="true" && "${file}" != ""){
+		$('#imagesrc${fieldName}').val("${file}");
+		$('#canvasImage${fieldName}').html('<img id="img${fieldName}" width="320" height="180" src="${file}">');
+		$('#deleteButton${fieldName}').show();
+	};
+});
+</script>
+</#macro>
+<#macro cropimage2 fieldName file cssClass synchronous >
+<!-- Content -->
+<div id="content_upload_image">
+<div class="row">
+	<div class="col-12 col-md-8">
+	<label id="label${fieldName}" class="btn btn-primary btn-upload" for="inputImage${fieldName}" title="#i18n{uploadimage.model.title.upload}" <#if file !="" > style='display:none' </#if>>
+		<input class="sr-only" id="inputImage${fieldName}" name="file" type="file" accept="image/*">
+		<span class="docs-tooltip" data-toggle="tooltip" title="#i18n{uploadimage.model.title.upload.tooltip}">
+		<span class="icon icon-upload"></span> #i18n{uploadimage.model.upload.button} 
+		</span>
+	</label>
+	<div id="img_div"  class="img-container${fieldName} ${cssClass!}">
+		<image id="img_file"  src="${file!}" alt="" class="">
+	</div>
+	<div class="row">
+		<div id= "buttonOption${fieldName}" class="col-12 docs-buttons" <#if file =="" > style='display:none' </#if>>
+			<div class="btn-group" >
+			<!-- 
+			<button id="crop" class="btn btn-primary" data-method="setDragMode" data-option="crop" type="button" title="#i18n{uploadimage.model.title.crop}">
+				<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;setDragMode&quot;, &quot;crop&quot;)">
+				<span class="icon icon-crop"></span>
+				</span>
+			</button> 
+			<button id="move" class="btn btn-primary" data-method="setDragMode" onClick="move('${fieldName}')" type="button" title="#i18n{uploadimage.model.title.move}">
+				<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;setDragMode&quot;, &quot;move&quot;)">
+				<span class="icon icon-move"></span>
+				</span>
+			</button> 
+			-->
+			<button  id="zoom_in" class="btn btn-primary" onClick="zoomIn('${fieldName}')" type="button" title="#i18n{uploadimage.model.title.zoom_in}">
+				<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;zoom&quot;, 0.1)">
+				<span class="icon icon-zoom-in"></span>
+				</span>
+			</button>
+			<button id="zoom_out" class="btn btn-primary" onClick="zoomOut('${fieldName}')" type="button" title="#i18n{uploadimage.model.title.zoom_out}">
+				<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;zoom&quot;, -0.1)">
+				<span class="icon icon-zoom-out"></span>
+				</span>
+			</button>
+			<button id="rotate_left" class="btn btn-primary" onClick="rotate('${fieldName}', -45)" type="button" title="#i18n{uploadimage.model.title.rotate_left}">
+				<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;rotate&quot;, -45)">
+				<span class="icon icon-rotate-left"></span>
+				</span>
+			</button>
+			<button id="rotate_right" class="btn btn-primary" onClick="rotate('${fieldName}', 45)" type="button" title="#i18n{uploadimage.model.title.rotate_right}">
+				<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;rotate&quot;, 45)">
+				<span class="icon icon-rotate-right"></span>
+				</span>
+			</button>
+			</div>
+				<div id="buttons" class="btn-group">
+			<button id="crop" class="btn btn-primary" onClick="cropBox('${fieldName}')"  type="button" title="#i18n{uploadimage.model.title.crop}">
+				<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;crop&quot;)">
+				<span class="icon icon-crop"></span>
+				</span>
+			</button>
+			<button id="clear" class="btn btn-primary" onClick="clearBox('${fieldName}')" type="button" title="#i18n{uploadimage.model.title.clear}">
+				<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;clear&quot;)">
+				<span class="icon icon-remove"></span>
+				</span>
+			</button>   
+			<button id="reset" class="btn btn-primary" onClick="resetBox('${fieldName}')" type="button" title="#i18n{uploadimage.model.title.reset}">
+				<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;reset&quot;)">
+				<span class="icon icon-refresh"></span>
+				</span>
+			</button>
+			<label id="upload"  class="btn btn-primary" for="inputImage${fieldName}" title="#i18n{uploadimage.model.title.upload}">
+				<input class="sr-only" id="inputImage${fieldName}" name="file" type="file" accept="image/*">
+				<span class="docs-tooltip" data-toggle="tooltip" title="#i18n{uploadimage.model.title.upload.tooltip}">
+				<span class="icon icon-upload"></span> #i18n{uploadimage.model.upload.button}
+				</span>
+			</label>
+			
+			</div>
+			<!--
+			<div class="btn-group">
+				<button id="destroy" class="btn btn-primary" data-method="destroy" type="button" title="Destroy" style="visibility:hidden;">
+					<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;destroy&quot;)">
+					<span class="icon icon-off"></span>
+					</span>
+				</button>
+					<button id="disabled" class="btn btn-primary" data-method="disable" type="button" title="Disable" style="visibility:hidden;">
+					<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;disable&quot;)">
+					<span class="icon icon-lock"></span>
+					</span>
+				</button>
+				<button id="enable"  class="btn btn-primary" data-method="enable" type="button" title="Enable" style="visibility:hidden;">
+					<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;enable&quot;)">
+					<span class="icon icon-unlock"></span>
+					</span>
+				</button>
+				</div> 
+				-->
+				<button  id="crp_button_canvas" class="btn btn-primary" onClick="getCroppedCanva('${fieldName}')" type="button">
+					<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper${fieldName}(&quot;getCroppedCanvas&quot;)">
+					#i18n{uploadimage.model.get.cropped.canvas}
+					</span>
+				</button>
+				<!-- 
+				<button id="id_crop_canvas" class="btn btn-primary" onClick="getCanvasWithParam('${fieldName}',{ width: 160, height: 90 } )"  type="button">
+					<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;getCroppedCanvas&quot;, { width: 160, height: 90 })">
+					160&times;90
+					</span>
+				</button>
+				<button class="btn btn-primary"  onClick="getCanvasWithParam('${fieldName}',{ width: 320, height: 180 } )" type="button">
+					<span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;getCroppedCanvas&quot;, { width: 320, height: 180 })">
+					320&times;180
+					</span>
+				</button> 
+				-->
+				<input id="imagesrc${fieldName}" name="${fieldName}" type="hidden" value="" />	
+				<button id="deleteButton${fieldName}" class="btn btn-default" onClick="deleteImage('${fieldName}')" type="button" title="#i18n{uploadimage.model.delete.button}" style="display:none">
+					<span class="glyphicon glyphicon-remove-circle"></span> #i18n{uploadimage.model.delete.button}
+				</button>
+				<div style="max-width: 5px;" id="canvasImage${fieldName}"></div>
+			</div>	
+		</div><!-- /.docs-toggles -->
+	</div>
+</div>
 </div>
  <!-- Alert -->
 <div class="docs-alert"><span class="warning message"></span></div>
-
-  <!-- Scripts -->
-<script type="text/javascript" src="jsp/site/plugins/uploadimage/GetMainUploadJs.jsp?fieldName=${fieldName}" ></script>
-
-
-<script type="text/javascript">
+ <!-- Scripts -->
+<script src="jsp/site/plugins/uploadimage/GetMainUploadJs.jsp?fieldName=${fieldName}" ></script>
+<script>
 $(function () {
  	'use strict';
 	if('${synchronous}'==="true" && "${file}" != ""){
@@ -149,5 +265,4 @@ $(function () {
 	};
 });
 </script>
-
 </#macro>

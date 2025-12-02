@@ -1,0 +1,42 @@
+<@pageContainer>
+    <@pageColumn>
+        <@pageHeader title='#i18n{uploadimage.adminFeature.ManageUploadimage.name}' toolsClass='d-flex'>
+			<@tform method="post" action="jsp/admin/plugins/uploadimage/GetViewOptions.jsp?action=add">
+				<@button type='submit' label='Creer une option'>
+			</@tform>
+		</@pageHeader>
+		<@messages errors=errors />
+		<@messages infos=infos />
+		<@box>
+			<@boxBody>
+			<@table headBody=true >
+			<@tr>
+				<@th>#i18n{uploadimage.option.FieldName}</@th>
+				<@th>Ratio</@th>
+				<@th>#i18n{uploadimage.option.Height}</@th>
+				<@th>#i18n{uploadimage.option.Width}</@th>
+				<@th>#i18n{uploadimage.option.Action}</@th>
+			</@tr>
+			<@tableHeadBodySeparator />
+			<#list list_options as option>
+			<@tr>
+				<@td>${option.fieldName!}</@td>
+				<@td>${option.ratio!}</@td>
+				<@td>${option.height!}</@td>
+				<@td>${option.width!}</@td>
+				<@td>
+					<@aButton href='jsp/admin/plugins/uploadimage/GetViewOptions.jsp?id_option=${option.id}&action=modify_option' title='#i18n{portal.util.labelModify}' buttonIcon='edit' />
+					<@aButton href='jsp/admin/plugins/uploadimage/GetViewOptions.jsp?id_option=${option.id}' title='#i18n{announce.manage_categories.formPreview} buttonIcon='globe' />
+					<@aButton href='jsp/admin/plugins/uploadimage/GetConfirmRemoveOptions.jsp?id_option=${option.id}' color='danger' title='#i18n{announce.manage_categories.formPreview} buttonIcon='trash' />
+				</@td>
+			</@tr>
+			</#list>
+			</@table>
+			<@tform action="jsp/admin/plugins/uploadimage/ManageUploadimage.jsp">
+				<@paginationAdmin paginator=paginator form=0 combo=1 />
+			</@tform>
+		</@boxBody>
+	</@box>
+	<@paginationAdmin paginator=paginator combo=1 />
+</@pageColumn>
+</@pageContainer>

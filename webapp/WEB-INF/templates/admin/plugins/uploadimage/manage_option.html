@@ -6,7 +6,7 @@
 		<@messages errors=errors /> <@messages infos=infos />
 		<input  type="hidden" name="action" id="action" value="${action!}"/>
         <div class="">
-		<input  type="hidden" name="id_option" id="id_option" value="${option.id!}"/>
+		<input  type="hidden" name="id_option" id="id_option" value="${cropperOption.id!}"/>
           
           <ul class="" role="menu" aria-labelledby="toggleOptions">
             <li role="presentation">
@@ -120,32 +120,32 @@
         <div class="docs-data">
           <div class="input-group">
             <label class="input-group-addon" for="dataX">#i18n{uploadimage.option.X}</label>
-            <input class="form-control" id="dataX" type="number" placeholder="x" name="x" value="${option.x!}" required>
+            <input class="form-control" id="dataX" type="number" placeholder="x" name="x" value="${cropperOption.x!}" required>
             <span class="input-group-addon">px</span>
           </div>
           <div class="input-group">
             <label class="input-group-addon" for="dataY">#i18n{uploadimage.option.Y}</label>
-            <input class="form-control" id="dataY"  type="number" placeholder="y" name="y" value="${option.y!}" required>
+            <input class="form-control" id="dataY"  type="number" placeholder="y" name="y" value="${cropperOption.y!}" required>
             <span class="input-group-addon">px</span>
           </div>
           <div class="input-group">
             <label class="input-group-addon" for="dataWidth">#i18n{uploadimage.option.Width}</label>
-            <input class="form-control" id="dataWidth" type="number" placeholder="width" name="width" value="${option.width!}" required>
+            <input class="form-control" id="dataWidth" type="number" placeholder="width" name="width" value="${cropperOption.width!}" required>
             <span class="input-group-addon">px</span>
           </div>
           <div class="input-group">
             <label class="input-group-addon" for="dataHeight">#i18n{uploadimage.option.Height}</label>
-            <input class="form-control" id="dataHeight" type="number" placeholder="height" name="height" value="${option.height!}" required>
+            <input class="form-control" id="dataHeight" type="number" placeholder="height" name="height" value="${cropperOption.height!}" required>
             <span class="input-group-addon">px</span>
           </div>
           <div class="input-group">
             <label class="input-group-addon" for="dataRatio">#i18n{uploadimage.option.Ratio}</label>
-            <input class="form-control" id="dataRatio" type="text" placeholder="16/9" name="ratio" value="${option.ratio!}" pattern="[0-9]+[/][0-9]+" title="Number/Number" required>
+            <input class="form-control" id="dataRatio" type="text" placeholder="16/9" name="ratio" value="${cropperOption.ratio!}" pattern="[0-9]+[/][0-9]+" title="Number/Number" required>
             <span class="input-group-addon">w/h</span>
           </div>
           <div class="input-group">
             <label class="input-group-addon" for="dataFieldName">#i18n{uploadimage.option.FieldName}</label>
-            <input class="form-control" id="dataFieldName" type="text" placeholder="fieldName" name="fieldName" value="${option.fieldName!}" pattern="[a-zA-Z0-9]+" title="Alpha-Numeric" required>
+            <input class="form-control" id="dataFieldName" type="text" placeholder="fieldName" name="fieldName" value="${cropperOption.fieldName!}" pattern="[a-zA-Z0-9]+" title="Alpha-Numeric" required>
             <span class="input-group-addon">string</span>
           </div>
           	 <div class="container">
