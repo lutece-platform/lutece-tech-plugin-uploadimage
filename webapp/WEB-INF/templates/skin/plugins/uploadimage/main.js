@@ -256,12 +256,22 @@ function resetBox(fieldName) {
 
 function getCroppedCanva( fieldName ){
 	const CurrentIdBlog = $('#id').val();
-	const CurrentdHeight = $('#dataHeight${fieldName}').val();
-	const CurrentdWidth = $('#dataWidth${fieldName}').val();
+	const CurrentdHeight = $('#dataHeight'+fieldName).val();
+	const CurrentdWidth = $('#dataWidth'+fieldName).val();
 	const $element= $('.img-container'+fieldName+' > img');
-	const CurrentfileType = $('#fileType option:checked').val();
+	const CurrentfileType = document.querySelector('#fileType') != null ? document.querySelector('#fileType').value : 0;
 	result = $element.cropper('getCroppedCanvas', { width: CurrentdWidth, height: CurrentdHeight });
-	doAddContent( fieldName, result.toDataURL( 'image/jpeg',1.0 ), CurrentfileType, CurrentIdBlog );
+	doAddContent( fieldName, result.toDataURL( 'image/jpeg',1.0 ), CurrentfileType, CurrentIdBlog ).then( resp => {
+		/* call the callback and populate the Title field with the file name */
+		if ( resp.status == 'OK' ){
+			if( resp.result == "BLOG_LOCKED" ){
+				setBlogToast( 'warning', 'Attention', 'Billet verrouillé !' );
+			} else {
+				//const CurrentExtension = file.name.split('.').pop().toLowerCase();
+				setListFile( resp.result[1], resp.result[0].replace(/'/g, "\\'"), CurrentfileType, '', CurrentIdBlog )
+			}
+		}
+	});
 };
 
 
