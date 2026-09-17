@@ -35,6 +35,7 @@
 package fr.paris.lutece.plugins.uploadimage.business;
 
 import fr.paris.lutece.test.LuteceTestCase;
+import org.junit.jupiter.api.Test;
 
 
 public class OptionsBusinessTest extends LuteceTestCase
@@ -83,7 +84,10 @@ public class OptionsBusinessTest extends LuteceTestCase
     private final static int Y2 = 2;
     private final static String ROTATE1 = "Rotate1";
     private final static String ROTATE2 = "Rotate2";
+    private final static String FIELDNAME1 = "fieldName1";
+    private final static String FIELDNAME2 = "fieldName2";
 
+    @Test
     public void testBusiness(  )
     {
         // Initialize an object
@@ -110,6 +114,7 @@ public class OptionsBusinessTest extends LuteceTestCase
         options.setX( X1 );
         options.setY( Y1 );
         options.setRatio( ROTATE1 );
+        options.setFieldName( FIELDNAME1 );
 
         // Create test
         OptionsHome.create( options );
@@ -160,6 +165,7 @@ public class OptionsBusinessTest extends LuteceTestCase
         options.setX( X2 );
         options.setY( Y2 );
         options.setRatio( ROTATE2 );
+        options.setFieldName( FIELDNAME2 );
         OptionsHome.update( options );
         optionsStored = OptionsHome.findByPrimaryKey( options.getId( ) );
         assertEquals( optionsStored.getStrict() , options.getStrict( ) );

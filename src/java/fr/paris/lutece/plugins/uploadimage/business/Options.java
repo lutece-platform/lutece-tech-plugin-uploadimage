@@ -33,8 +33,7 @@
  */ 
 package fr.paris.lutece.plugins.uploadimage.business;
 
-import javax.validation.constraints.*;
-import org.hibernate.validator.constraints.*;
+import jakarta.validation.constraints.Size;
 
 
 /**

@@ -1,10 +1,9 @@
 <%@ page errorPage="../../ErrorPage.jsp" %>
 
+${ pageContext.setAttribute( 'strContent', manageUploadimageJspBean.processController( pageContext.request , pageContext.response ) ) }
+
 <jsp:include page="../../AdminHeader.jsp" />
 
-<jsp:useBean id="manageuploadimage" scope="session" class="fr.paris.lutece.plugins.uploadimage.web.ManageUploadimageJspBean" />
-
-<% manageuploadimage.init( request, manageuploadimage.RIGHT_MANAGEUPLOADIMAGE ); %>
-<%= manageuploadimage.getManageUploadimageHome ( request ) %>
+${ pageContext.getAttribute( 'strContent' ) }
 
 <%@ include file="../../AdminFooter.jsp" %>

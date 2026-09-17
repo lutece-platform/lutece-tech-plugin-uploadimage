@@ -36,8 +36,8 @@ package fr.paris.lutece.plugins.uploadimage.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
 import java.util.Collection;
+import jakarta.enterprise.inject.spi.CDI;
 
 /**
  * This class provides instances management methods (create, find, ...) for Options objects
@@ -47,7 +47,7 @@ public final class OptionsHome
 {
     // Static variable pointed at the DAO instance
 
-    private static IOptionsDAO _dao = SpringContextService.getBean( "uploadimage.optionsDAO" );
+    private static IOptionsDAO _dao = CDI.current( ).select( IOptionsDAO.class ).get( );
     private static Plugin _plugin = PluginService.getPlugin( "uploadimage" );
 
     /**

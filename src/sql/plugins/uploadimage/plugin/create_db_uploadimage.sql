@@ -1,3 +1,6 @@
+-- liquibase formatted sql
+-- changeset uploadimage:create_db_uploadimage.sql
+-- preconditions onFail:MARK_RAN onError:WARN
 
 --
 -- Structure for table uploadimage_options
@@ -5,7 +8,7 @@
 
 DROP TABLE IF EXISTS uploadimage_options;
 CREATE TABLE uploadimage_options (
-id_options int(6) NOT NULL,
+id_options int NOT NULL,
 strict SMALLINT NOT NULL,
 responsive SMALLINT NOT NULL,
 checkimageorigin SMALLINT NOT NULL,
@@ -23,11 +26,11 @@ mousewheelzoom SMALLINT NOT NULL,
 cropboxmovable SMALLINT NOT NULL,
 cropboxresizable SMALLINT NOT NULL,
 doubleclicktoggle SMALLINT NOT NULL,
-width int(11) NOT NULL default '0',
-height int(11) NOT NULL default '0',
-x int(11) NOT NULL default '0',
-y int(11) NOT NULL default '0',
-ratio varchar(50) NOT NULL default '',
-fieldName varchar(50) NOT NULL default '',
+width int DEFAULT 0 NOT NULL,
+height int DEFAULT 0 NOT NULL,
+x int DEFAULT 0 NOT NULL,
+y int DEFAULT 0 NOT NULL,
+ratio varchar(50) DEFAULT '' NOT NULL,
+fieldName varchar(50) DEFAULT '' NOT NULL,
 PRIMARY KEY (id_options)
 );

@@ -37,49 +37,62 @@ import fr.paris.lutece.plugins.uploadimage.business.Options;
 import fr.paris.lutece.plugins.uploadimage.business.OptionsHome;
 import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
-import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.portal.util.mvc.admin.MVCAdminJspBean;
+import fr.paris.lutece.portal.util.mvc.admin.annotations.Controller;
+import fr.paris.lutece.portal.util.mvc.commons.annotations.Action;
+import fr.paris.lutece.portal.util.mvc.commons.annotations.View;
+import fr.paris.lutece.portal.web.cdi.mvc.Models;
 import fr.paris.lutece.portal.web.util.LocalizedPaginator;
-import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.html.Paginator;
 import fr.paris.lutece.util.url.UrlItem;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
- * ManageUploadimage JSP Bean abstract class for JSP Bean
+ * Manages the cropping options the plugin offers to the image upload widget.
  */
-public  class ManageUploadimageJspBean extends MVCAdminJspBean
+@SessionScoped
+@Named
+@Controller( controllerJsp = "ManageUploadimage.jsp", controllerPath = "jsp/admin/plugins/uploadimage/", right = ManageUploadimageJspBean.RIGHT_MANAGEUPLOADIMAGE, securityTokenEnabled = true )
+public class ManageUploadimageJspBean extends MVCAdminJspBean
 {
-    // Right
+    /** Right needed to reach the screens of this plugin */
     public static final String RIGHT_MANAGEUPLOADIMAGE = "UPLOADIMAGE_MANAGEMENT";
-    
+
+    private static final long serialVersionUID = 1L;
+
     private static final String PROPERTY_DEFAULT_LIST_ITEM_PER_PAGE = "uploadimage.listItems.itemsPerPage";
     private static final String PARAMETER_PAGE_INDEX = "page_index";
     private static final String MARK_PAGINATOR = "paginator";
     private static final String MARK_NB_ITEMS_PER_PAGE = "nb_items_per_page";
     private static final String MARK_LIST_OPTIONS = "list_options";
-    private static final String TEMPLATE_MANAGE_UPLOAD_IMAGE= "/admin/plugins/uploadimage/manage_uploadimage.html";
-    private static final String TEMPLATE_MANAGE_VIEW_OPTION= "/admin/plugins/uploadimage/manage_option.html";
-    private static final String JSP_MANAGE_OPTIONS= "jsp/admin/plugins/uploadimage/ManageUploadimage.jsp";
-    private static final String JSP_DO_REMOVE_OPTION= "jsp/admin/plugins/uploadimage/DoRemoveOptions.jsp";
-    /* Jsp Redirect */
-    private static final String JSP_REDIRECT_TO_MANAGE_UPLOAD_IMAGE = "ManageUploadimage.jsp";
-    /* Messages */
-    private static final String MESSAGE_CONFIRM_REMOVE_OPTION = "uploadimage.message.confirmRemoveOption";
+    private static final String MARK_OPTION = "cropperOption";
+    private static final String TEMPLATE_MANAGE_UPLOAD_IMAGE = "/admin/plugins/uploadimage/manage_uploadimage.html";
+    private static final String TEMPLATE_MANAGE_VIEW_OPTION = "/admin/plugins/uploadimage/manage_option.html";
+    private static final String PROPERTY_PAGE_TITLE_MANAGE = "uploadimage.adminFeature.ManageUploadimage.name";
+    private static final String PROPERTY_PAGE_TITLE_OPTION = "uploadimage.option.pageTitle";
+    private static final String MESSAGE_CONFIRM_REMOVE_OPTION = "uploadimage.message.confirmRemoveOptions";
     private static final String INFO_OPTION_CREATED = "uploadimage.message.option.assigned";
     private static final String INFO_OPTION_UPDATE = "uploadimage.message.option.update";
-    //Parameters
+
+    private static final String VIEW_MANAGE_UPLOADIMAGE = "manageUploadimage";
+    private static final String VIEW_OPTION = "viewOption";
+    private static final String VIEW_CONFIRM_REMOVE_OPTION = "confirmRemoveOption";
+    private static final String ACTION_MANAGE_OPTIONS = "manageOptions";
+    private static final String ACTION_REMOVE_OPTION = "removeOption";
+
+    // Parameters
     private static final String PARAMETER_STRICT = "strict";
     private static final String PARAMETER_RESPONSIVE = "responsive";
     private static final String PARAMETER_CHECKIMAGEORIGIN = "checkimageorigin";
-    private static final String PARAMETER_Modal = "modal";
+    private static final String PARAMETER_MODAL = "modal";
     private static final String PARAMETER_GUIDES = "guides";
     private static final String PARAMETER_HIGHLIGHT = "highlight";
     private static final String PARAMETER_BACKGOUND = "background";
@@ -87,9 +100,9 @@ public  class ManageUploadimageJspBean extends MVCAdminJspBean
     private static final String PARAMETER_DRAGCROP = "dragcrop";
     private static final String PARAMETER_MOVABLE = "movable";
     private static final String PARAMETER_ROTATABLE = "rotatable";
-    private static final String PARAMETER_ZOOMABLE= "zoomable";
-    private static final String PARAMETER_TOUCHDRAZOOM= "touchdragzoom";
-    private static final String PARAMETER_MOUSEWHEELZOOM= "mousewheelzoom";
+    private static final String PARAMETER_ZOOMABLE = "zoomable";
+    private static final String PARAMETER_TOUCHDRAZOOM = "touchdragzoom";
+    private static final String PARAMETER_MOUSEWHEELZOOM = "mousewheelzoom";
     private static final String PARAMETER_CROPBOXMOVABLE = "cropboxmovable";
     private static final String PARAMETER_CROPBOXRESIZABLE = "cropboxresizable";
     private static final String PARAMETER_DOUBLECLICKTOGGLE = "doubleclicktoggle";
@@ -101,198 +114,220 @@ public  class ManageUploadimageJspBean extends MVCAdminJspBean
     private static final String PARAMATER_FIELDNAME = "fieldName";
     private static final String PARAMETER_IDOPTION = "id_option";
 
-    //Variables
+    private static final int DEFAULT_WIDTH = 1024;
+    private static final int DEFAULT_HEIGHT = 576;
+    private static final int DEFAULT_X = 128;
+    private static final int DEFAULT_Y = 72;
+    private static final String DEFAULT_RATIO = "16/9";
+
     private int _nDefaultItemsPerPage;
     private String _strCurrentPageIndex;
     private int _nItemsPerPage;
 
-    protected Map<String, Object> getPaginatedListModel( HttpServletRequest request, String strBookmark, List list,
-        String strManageJsp )
+    /**
+     * The list of cropping options.
+     *
+     * @param request
+     *            the http request
+     * @param model
+     *            the view model
+     * @return the page
+     */
+    @View( value = VIEW_MANAGE_UPLOADIMAGE, defaultView = true )
+    public String getManageUploadimageHome( HttpServletRequest request, Models model )
     {
         _strCurrentPageIndex = Paginator.getPageIndex( request, Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
         _nDefaultItemsPerPage = AppPropertiesService.getPropertyInt( PROPERTY_DEFAULT_LIST_ITEM_PER_PAGE, 50 );
-        _nItemsPerPage = Paginator.getItemsPerPage( request, Paginator.PARAMETER_ITEMS_PER_PAGE, _nItemsPerPage,
-                _nDefaultItemsPerPage );
+        _nItemsPerPage = Paginator.getItemsPerPage( request, Paginator.PARAMETER_ITEMS_PER_PAGE, _nItemsPerPage, _nDefaultItemsPerPage );
 
-        UrlItem url = new UrlItem( strManageJsp );
-        String strUrl = url.getUrl(  );
+        Collection<Options> options = OptionsHome.getOptionssList( );
+        List<Options> listOptions = new ArrayList<>( options );
 
-        // PAGINATOR
-        LocalizedPaginator paginator = new LocalizedPaginator( list, _nItemsPerPage, strUrl, PARAMETER_PAGE_INDEX,
-                _strCurrentPageIndex, getLocale(  ) );
+        LocalizedPaginator<Options> paginator = new LocalizedPaginator<>( listOptions, _nItemsPerPage, getUrlPage( ), PARAMETER_PAGE_INDEX,
+                _strCurrentPageIndex, getLocale( ) );
 
-        Map<String, Object> model = getModel(  );
-
-        model.put( MARK_NB_ITEMS_PER_PAGE, "" + _nItemsPerPage );
+        model.put( MARK_NB_ITEMS_PER_PAGE, String.valueOf( _nItemsPerPage ) );
         model.put( MARK_PAGINATOR, paginator );
-        model.put( strBookmark, paginator.getPageItems(  ) );
+        model.put( MARK_LIST_OPTIONS, paginator.getPageItems( ) );
 
-        return model;
+        return getPage( PROPERTY_PAGE_TITLE_MANAGE, TEMPLATE_MANAGE_UPLOAD_IMAGE, model );
     }
-    
+
     /**
-     * get form to import file
+     * The form of one cropping option, empty with sensible defaults when no identifier is given.
+     *
      * @param request
-     * @return view of formulaire
+     *            the http request
+     * @param model
+     *            the view model
+     * @return the page
      */
-   public String getManageUploadimageHome ( HttpServletRequest request ){
-	   
-	   _strCurrentPageIndex = Paginator.getPageIndex( request, Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
-       _nDefaultItemsPerPage = AppPropertiesService.getPropertyInt( PROPERTY_DEFAULT_LIST_ITEM_PER_PAGE, 50 );
-       _nItemsPerPage = Paginator.getItemsPerPage( request, Paginator.PARAMETER_ITEMS_PER_PAGE, _nItemsPerPage,
-               _nDefaultItemsPerPage );
-       
-	   Collection<Options> options = OptionsHome.getOptionssList(  );
+    @View( value = VIEW_OPTION, securityTokenAction = ACTION_MANAGE_OPTIONS )
+    public String getViewOptions( HttpServletRequest request, Models model )
+    {
+        String strKey = request.getParameter( PARAMETER_IDOPTION );
+        Options option = new Options( );
 
-       // PAGINATOR
-       LocalizedPaginator paginator = new LocalizedPaginator( (List) options, _nItemsPerPage, getUrlPage(  ), PARAMETER_PAGE_INDEX,
-               _strCurrentPageIndex, getLocale(  ) );
-      
+        if ( strKey != null )
+        {
+            option = OptionsHome.findByPrimaryKey( Integer.parseInt( strKey ) );
+        }
+        else
+        {
+            option.setHeight( DEFAULT_HEIGHT );
+            option.setWidth( DEFAULT_WIDTH );
+            option.setX( DEFAULT_X );
+            option.setY( DEFAULT_Y );
+            option.setRatio( DEFAULT_RATIO );
+        }
 
-       Map<String, Object> model = getModel(  );
+        model.put( MARK_OPTION, option );
 
-       model.put( MARK_NB_ITEMS_PER_PAGE, "" + _nItemsPerPage );
-       model.put( MARK_PAGINATOR, paginator );
-	   model.put( MARK_LIST_OPTIONS, paginator.getPageItems( ));
+        return getPage( PROPERTY_PAGE_TITLE_OPTION, TEMPLATE_MANAGE_VIEW_OPTION, model );
+    }
 
-       HtmlTemplate templateList = AppTemplateService.getTemplate( TEMPLATE_MANAGE_UPLOAD_IMAGE, getLocale(  ), model );
+    /**
+     * Creates the option, or updates the one the form carries an identifier for.
+     *
+     * @param request
+     *            the http request
+     * @return the manage view
+     */
+    @Action( ACTION_MANAGE_OPTIONS )
+    public String manageOptions( HttpServletRequest request )
+    {
+        Options option = new Options( );
 
-       return getAdminPage( templateList.getHtml(  ) );
-   }
-   
-   public String manageOptions( HttpServletRequest request ){
-	   
-	   boolean bStrict = Boolean.parseBoolean(request.getParameter(PARAMETER_STRICT));
-	   boolean bResponsive = Boolean.parseBoolean(request.getParameter(PARAMETER_RESPONSIVE));
-	   boolean bCheckImageOrigin = Boolean.parseBoolean(request.getParameter(PARAMETER_CHECKIMAGEORIGIN));
-	   boolean bModal = Boolean.parseBoolean(request.getParameter(PARAMETER_Modal));
-	   boolean bGuides = Boolean.parseBoolean(request.getParameter(PARAMETER_GUIDES));
-	   boolean bHighlight = Boolean.parseBoolean(request.getParameter(PARAMETER_HIGHLIGHT));
-	   boolean bBackground = Boolean.parseBoolean(request.getParameter(PARAMETER_BACKGOUND));
-	   boolean bAutocrop = Boolean.parseBoolean(request.getParameter(PARAMETER_AUTOCROP));
-	   boolean bDragCrop = Boolean.parseBoolean(request.getParameter(PARAMETER_DRAGCROP));
-	   boolean bMovable = Boolean.parseBoolean(request.getParameter(PARAMETER_MOVABLE));
-	   boolean bRotatable = Boolean.parseBoolean(request.getParameter(PARAMETER_ROTATABLE));
-	   boolean bZoomable = Boolean.parseBoolean(request.getParameter(PARAMETER_ZOOMABLE));
-	   boolean bTouchDragZoom = Boolean.parseBoolean(request.getParameter(PARAMETER_TOUCHDRAZOOM));
-	   boolean bMouseWheelZoom = Boolean.parseBoolean(request.getParameter(PARAMETER_MOUSEWHEELZOOM));
-	   boolean bCropBoxMovable = Boolean.parseBoolean(request.getParameter(PARAMETER_CROPBOXMOVABLE));
-	   boolean bCropBoxResizable = Boolean.parseBoolean(request.getParameter(PARAMETER_CROPBOXRESIZABLE));
-	   boolean bDoubleClickToggle = Boolean.parseBoolean(request.getParameter(PARAMETER_DOUBLECLICKTOGGLE));
-	 
-	   int nWidth = Integer.parseInt(request.getParameter(PARAMETER_WIDTH));
-	   int nHeight = Integer.parseInt(request.getParameter(PARAMETER_HEIGHT));
-	   int nX = Integer.parseInt(request.getParameter(PARAMETER_X));
-	   int nY = Integer.parseInt(request.getParameter(PARAMETER_Y));
-	   
-	   String strId = request.getParameter(PARAMETER_IDOPTION);
-	   
-	   String strRatio = request.getParameter(PARAMETER_RATIO);
-	   String strFieldName = request.getParameter(PARAMATER_FIELDNAME);
-	   
-	   String action= request.getParameter("action");
-	   
-	   Options option= new Options();
-	   
-	   option.setAutoCrop(bAutocrop);
-	   option.setBackground(bBackground);
-	   option.setCheckImageOrigin(bCheckImageOrigin);
-	   option.setCropBoxMovable(bCropBoxMovable);
-	   option.setDoubleClickToggle(bDoubleClickToggle);
-	   option.setDragCrop(bDragCrop);
-	   option.setGuides(bGuides);
-	   option.setHighlight(bHighlight);
-	   option.setModal(bModal);
-	   option.setMouseWheelZoom(bMouseWheelZoom);
-	   option.setMovable(bMovable);
-	   option.setResponsive(bResponsive);
-	   option.setRotatable(bRotatable);
-	   option.setStrict(bStrict);
-	   option.setTouchDragZoom(bTouchDragZoom);
-	   option.setZoomable(bZoomable);
-	   option.setCropBoxResizable(bCropBoxResizable);
-	   
-	   option.setHeight(nHeight);
-	   option.setWidth(nWidth);
-	   option.setX(nX);
-	   option.setY(nY);
-	   option.setRatio(strRatio);
-	   option.setFieldName(strFieldName);
-	   
-	   if(action.equals("modify_option")){
-		   option.setId(Integer.parseInt(strId));
-		   OptionsHome.update(option);
-		   addInfo( INFO_OPTION_CREATED, getLocale(  ) );
-	   }
-	   else{
-		   OptionsHome.create(option);
-		   addInfo( INFO_OPTION_UPDATE, getLocale(  ) );
-	   }
-	   
-	   Map<String, Object> model = getModel(  );
-	   model.put("cropperOption", option);  
-	   model.put("action", "modify_option");
-	   
-	   
-	   return getManageUploadimageHome(request);
-   }
-  
-   public String getViewOptions ( HttpServletRequest request ){
-	   
-	   String nKey= request.getParameter(PARAMETER_IDOPTION);
-	   String strAction= request.getParameter("action");
-	   Options option= new Options( );
-	   if(nKey != null){
-		   option=OptionsHome.findByPrimaryKey(Integer.parseInt(nKey));
-		  
-	   }else{
-		   option.setHeight(576);
-		   option.setWidth(1024);
-		   option.setX(128);
-		   option.setY(72);
-		   option.setRatio("16/9");   
-	   }
-	   Map<String, Object> model = getModel(  );
-	   model.put("cropperOption", option);  
-	   model.put("action", strAction);
-	   HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_VIEW_OPTION, request.getLocale(  ),
-               model );
-	   
-	   return template.getHtml(  );
-   }
-   
-   /**
-    * Manages the removal form of a options whose identifier is in the http
-    * request
-    * @return the HTML code to confirm
-    * @param request The HTTP request
-    */
-   public String getConfirmRemoveOption( HttpServletRequest request )
-   {
-	   String nKey= request.getParameter(PARAMETER_IDOPTION);
-	   UrlItem url = new UrlItem( JSP_DO_REMOVE_OPTION );
-       url.addParameter( PARAMETER_IDOPTION, nKey );
-       
-       return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_OPTION, url.getUrl(  ),
-               AdminMessage.TYPE_CONFIRMATION );
+        option.setStrict( readBoolean( request, PARAMETER_STRICT ) );
+        option.setResponsive( readBoolean( request, PARAMETER_RESPONSIVE ) );
+        option.setCheckImageOrigin( readBoolean( request, PARAMETER_CHECKIMAGEORIGIN ) );
+        option.setModal( readBoolean( request, PARAMETER_MODAL ) );
+        option.setGuides( readBoolean( request, PARAMETER_GUIDES ) );
+        option.setHighlight( readBoolean( request, PARAMETER_HIGHLIGHT ) );
+        option.setBackground( readBoolean( request, PARAMETER_BACKGOUND ) );
+        option.setAutoCrop( readBoolean( request, PARAMETER_AUTOCROP ) );
+        option.setDragCrop( readBoolean( request, PARAMETER_DRAGCROP ) );
+        option.setMovable( readBoolean( request, PARAMETER_MOVABLE ) );
+        option.setRotatable( readBoolean( request, PARAMETER_ROTATABLE ) );
+        option.setZoomable( readBoolean( request, PARAMETER_ZOOMABLE ) );
+        option.setTouchDragZoom( readBoolean( request, PARAMETER_TOUCHDRAZOOM ) );
+        option.setMouseWheelZoom( readBoolean( request, PARAMETER_MOUSEWHEELZOOM ) );
+        option.setCropBoxMovable( readBoolean( request, PARAMETER_CROPBOXMOVABLE ) );
+        option.setCropBoxResizable( readBoolean( request, PARAMETER_CROPBOXRESIZABLE ) );
+        option.setDoubleClickToggle( readBoolean( request, PARAMETER_DOUBLECLICKTOGGLE ) );
 
-   }
-   
-   public String removeOptions ( HttpServletRequest request ){
-	   
-	   String nKey= request.getParameter(PARAMETER_IDOPTION);
-	   if(nKey != null){
-		   OptionsHome.remove(Integer.parseInt(nKey));	  
-	   }
-	 
-	   return JSP_REDIRECT_TO_MANAGE_UPLOAD_IMAGE;
-   }
-   
-   private String getUrlPage(  )
-   {
-       UrlItem url = new UrlItem( JSP_MANAGE_OPTIONS );
+        option.setHeight( readInt( request, PARAMETER_HEIGHT, DEFAULT_HEIGHT ) );
+        option.setWidth( readInt( request, PARAMETER_WIDTH, DEFAULT_WIDTH ) );
+        option.setX( readInt( request, PARAMETER_X, DEFAULT_X ) );
+        option.setY( readInt( request, PARAMETER_Y, DEFAULT_Y ) );
+        option.setRatio( request.getParameter( PARAMETER_RATIO ) );
+        option.setFieldName( request.getParameter( PARAMATER_FIELDNAME ) );
 
-       return url.getUrl(  );
-   }
+        String strKey = request.getParameter( PARAMETER_IDOPTION );
 
+        if ( strKey != null && !strKey.isEmpty( ) )
+        {
+            option.setId( Integer.parseInt( strKey ) );
+            OptionsHome.update( option );
+            addInfo( INFO_OPTION_UPDATE, getLocale( ) );
+        }
+        else
+        {
+            OptionsHome.create( option );
+            addInfo( INFO_OPTION_CREATED, getLocale( ) );
+        }
+
+        return redirectView( request, VIEW_MANAGE_UPLOADIMAGE );
+    }
+
+    /**
+     * The confirmation question before removing an option.
+     *
+     * @param request
+     *            the http request
+     * @return the message url
+     */
+    @View( value = VIEW_CONFIRM_REMOVE_OPTION, securityTokenAction = ACTION_REMOVE_OPTION )
+    public String getConfirmRemoveOption( HttpServletRequest request )
+    {
+        UrlItem url = new UrlItem( getActionUrl( ACTION_REMOVE_OPTION ) );
+        url.addParameter( PARAMETER_IDOPTION, request.getParameter( PARAMETER_IDOPTION ) );
+
+        return redirect( request, AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_OPTION, url.getUrl( ),
+                AdminMessage.TYPE_CONFIRMATION ) );
+    }
+
+    /**
+     * Removes the option the request names.
+     *
+     * @param request
+     *            the http request
+     * @return the manage view
+     */
+    @Action( ACTION_REMOVE_OPTION )
+    public String removeOptions( HttpServletRequest request )
+    {
+        String strKey = request.getParameter( PARAMETER_IDOPTION );
+
+        if ( strKey != null && !strKey.isEmpty( ) )
+        {
+            OptionsHome.remove( Integer.parseInt( strKey ) );
+        }
+
+        return redirectView( request, VIEW_MANAGE_UPLOADIMAGE );
+    }
+
+    /**
+     * Reads a checkbox, absent when unchecked.
+     *
+     * @param request
+     *            the http request
+     * @param strParameter
+     *            the parameter name
+     * @return its boolean value
+     */
+    private static boolean readBoolean( HttpServletRequest request, String strParameter )
+    {
+        return Boolean.parseBoolean( request.getParameter( strParameter ) );
+    }
+
+    /**
+     * Reads a number, falling back on a default rather than failing on an empty or malformed field.
+     *
+     * @param request
+     *            the http request
+     * @param strParameter
+     *            the parameter name
+     * @param nDefault
+     *            the value to use when the parameter is absent or not a number
+     * @return the number
+     */
+    private static int readInt( HttpServletRequest request, String strParameter, int nDefault )
+    {
+        String strValue = request.getParameter( strParameter );
+
+        if ( strValue == null || strValue.isEmpty( ) )
+        {
+            return nDefault;
+        }
+
+        try
+        {
+            return Integer.parseInt( strValue );
+        }
+        catch( NumberFormatException e )
+        {
+            return nDefault;
+        }
+    }
+
+    /**
+     * Url of the manage screen, the paginator's base.
+     *
+     * @return the url
+     */
+    private String getUrlPage( )
+    {
+        return new UrlItem( getViewUrl( VIEW_MANAGE_UPLOADIMAGE ) ).getUrl( );
+    }
 }
