@@ -1,39 +1,134 @@
-
+/*
+ * Copyright (c) 2002-2015, Mairie de Paris
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright notice
+ *     and the following disclaimer.
+ *
+ *  2. Redistributions in binary form must reproduce the above copyright notice
+ *     and the following disclaimer in the documentation and/or other materials
+ *     provided with the distribution.
+ *
+ *  3. Neither the name of 'Mairie de Paris' nor 'Lutece' nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * License 1.0
+ */ 
 package fr.paris.lutece.plugins.uploadimage.service;
 
+import javax.cache.CacheException;
+
 import fr.paris.lutece.portal.service.cache.AbstractCacheableService;
+import fr.paris.lutece.portal.service.util.AppLogService;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
- * Cache service for  upload image
+ * Cache service for upload image
  */
-public final class UploadImageCacheService extends AbstractCacheableService
+@ApplicationScoped
+public class UploadImageCacheService extends AbstractCacheableService<String, Object>
 {
     private static final String CACHE_NAME = "uploadimage.uploadimageCacheService";
-    private static UploadImageCacheService _instance = new UploadImageCacheService(  );
 
     /**
-     * Private constructor
+     * Creates the cache once the bean is built.
      */
-    private UploadImageCacheService(  )
+    @PostConstruct
+    public void init( )
     {
-        initCache(  );
-    }
-
-    /**
-     * Get the instance of the service
-     * @return The instance of the service
-     */
-    public static UploadImageCacheService getInstance(  )
-    {
-        return _instance;
+        initCache( CACHE_NAME, String.class, Object.class );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String getName(  )
+    public String getName( )
     {
         return CACHE_NAME;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Guarded: the inherited method dereferences the cache, which is null while the cache is disabled.
+     */
+    @Override
+    public void put( String strKey, Object object )
+    {
+        if ( isCacheEnable( ) )
+        {
+            try
+            {
+                super.put( strKey, object );
+            }
+            catch( CacheException | IllegalStateException e )
+            {
+                AppLogService.error( "UploadImageCacheService : error putting key {} in cache", strKey, e );
+            }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Guarded: the inherited method dereferences the cache, which is null while the cache is disabled.
+     */
+    @Override
+    public Object get( String strKey )
+    {
+        if ( isCacheEnable( ) )
+        {
+            try
+            {
+                return super.get( strKey );
+            }
+            catch( CacheException | IllegalStateException e )
+            {
+                AppLogService.error( "UploadImageCacheService : error getting key {} from cache", strKey, e );
+            }
+        }
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Guarded: the inherited method dereferences the cache, which is null while the cache is disabled.
+     */
+    @Override
+    public boolean remove( String strKey )
+    {
+        if ( isCacheEnable( ) )
+        {
+            try
+            {
+                return super.remove( strKey );
+            }
+            catch( CacheException | IllegalStateException e )
+            {
+                AppLogService.error( "UploadImageCacheService : error removing key {} from cache", strKey, e );
+            }
+        }
+        return false;
     }
 }

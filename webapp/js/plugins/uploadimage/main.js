@@ -228,8 +228,13 @@ $(function () {
     });
 
 
-    // Tooltips
-    $('[data-toggle="tooltip"]').tooltip();
+    // Tooltips: Bootstrap 5 exposes a class, not a jQuery plugin, and renamed the attribute.
+    if ( window.bootstrap && window.bootstrap.Tooltip )
+    {
+      document.querySelectorAll( '[data-bs-toggle="tooltip"]' ).forEach( function ( el ) {
+        new window.bootstrap.Tooltip( el );
+      } );
+    }
 
   }());
 

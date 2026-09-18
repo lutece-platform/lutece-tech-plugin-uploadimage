@@ -1,7 +1,2 @@
-
-
-<%@ page contentType="application/javascript" errorPage="../../ErrorPagePortal.jsp" trimDirectiveWhitespaces="true" %>
-
-<jsp:useBean id="uploadimageApp" scope="request" class="fr.paris.lutece.plugins.uploadimage.web.UploadimageApp" />
-
-<%= uploadimageApp.getMainUploadJs( request ) %>
+<%@ page contentType="application/javascript; charset=UTF-8" pageEncoding="UTF-8" errorPage="../../ErrorPagePortal.jsp" trimDirectiveWhitespaces="true" %>
+${ uploadimageJsProvider.getMainUploadJs( pageContext.request ) }

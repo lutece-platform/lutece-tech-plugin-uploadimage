@@ -46,7 +46,10 @@ import fr.paris.lutece.portal.util.mvc.commons.annotations.View;
 import fr.paris.lutece.portal.util.mvc.xpage.annotations.Controller;
 import fr.paris.lutece.util.html.HtmlTemplate;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.apache.commons.lang3.util.*;
 
@@ -54,9 +57,14 @@ import org.apache.commons.lang3.util.*;
  * This class provides a simple implementation of an XPage
  */
  
+@RequestScoped
+@Named( "uploadimage.xpage.uploadimage" )
 @Controller( xpageName = "uploadimage" , pageTitleI18nKey = "uploadimage.xpage.uploadimage.pageTitle" , pagePathI18nKey = "uploadimage.xpage.uploadimage.pagePathLabel" )
 public class UploadimageApp extends MVCApplication
 {
+    @Inject
+    private UploadImageCacheService _cacheService;
+
     private static final String TEMPLATE_XPAGE = "/skin/plugins/uploadimage/uploadimageXpage.html";
  // Templates
     private static final String TEMPLATE_MAIN_UPLOAD_IMAGE_JS = "skin/plugins/uploadimage/main.js";
@@ -82,75 +90,5 @@ public class UploadimageApp extends MVCApplication
     }
     
     
-    public String getMainUploadJs( HttpServletRequest request )
-    
-    {
-    	
-    	//String nId = request.getParameter(IDOPTION);
-    	String strFieldname = request.getParameter(PARAMATER_FIELDNAME);
-    	Options option= new Options( );
-    	
- 	   if(strFieldname != null && !strFieldname.isEmpty( )){
- 		   option=OptionsHome.findByFieldName(strFieldname);  
- 	   }else{
- 		   option= getDefaultOption(	);
- 	   }
- 	   if(option == null ){
- 		   option= getDefaultOption(  );
- 	   }
-   
-    	 String strKey = "clef";
-    	
-    	 String strContent = (String) UploadImageCacheService.getInstance(  ).getFromCache( strKey );
-       
-
-       //  if ( strContent == null )
-        // {
-	    	 Map<String, Object> model = new HashMap<String, Object>(  );
-	    	 model.put( "MARK_BASE_URL"," strBaseUrl" );
-	    	 model.put("cropperOption", option);
-	    	 model.put(MARK_FIELDNAME, strFieldname);
-	    	 
-	         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MAIN_UPLOAD_IMAGE_JS, request.getLocale(  ),
-	                    model );
-	         strContent = template.getHtml(  );
-	      //      UploadImageCacheService.getInstance(  ).putInCache( strKey, strContent );
-        //}
-
-        return strContent;
-    }
-    
-    private Options getDefaultOption(	){
-    	
-    	Options option= new Options( );
-    	
-       option.setAutoCrop(true);
-  	   option.setBackground(true);
-  	   option.setCheckImageOrigin(true);
-  	   option.setCropBoxMovable(true);
-  	   option.setDoubleClickToggle(true);
-  	   option.setDragCrop(true);
-  	   option.setGuides(true);
-  	   option.setHighlight(true);
-  	   option.setModal(true);
-  	   option.setMouseWheelZoom(true);
-  	   option.setMovable(true);
-  	   option.setResponsive(true);
-  	   option.setRotatable(true);
-  	   option.setStrict(true);
-  	   option.setTouchDragZoom(true);
-  	   option.setZoomable(true);
-  	   option.setCropBoxResizable(true);
-  	   
-  	   option.setHeight(576);
-  	   option.setWidth(1024);
-  	   option.setX(128);
-  	   option.setY(72);
-  	   option.setRatio("16/9");
-  	   option.setFieldName("fieldName");
-  	   
-  	   return option;
-    	
-    }
 
 }
