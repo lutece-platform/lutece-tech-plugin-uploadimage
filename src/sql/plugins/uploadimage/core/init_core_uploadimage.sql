@@ -7,7 +7,7 @@
 --
 DELETE FROM core_admin_right WHERE id_right = 'UPLOADIMAGE_MANAGEMENT';
 INSERT INTO core_admin_right (id_right,name,level_right,admin_url,description,is_updatable,plugin_name,id_feature_group,icon_url,documentation_url, id_order ) VALUES 
-('UPLOADIMAGE_MANAGEMENT','uploadimage.adminFeature.ManageUploadimage.name',1,'jsp/admin/plugins/uploadimage/ManageUploadimage.jsp','uploadimage.adminFeature.ManageUploadimage.description',0,'uploadimage',NULL,NULL,NULL,4);
+('UPLOADIMAGE_MANAGEMENT','uploadimage.adminFeature.ManageUploadimage.name',1,'jsp/admin/plugins/uploadimage/ManageUploadimage.jsp','uploadimage.adminFeature.ManageUploadimage.description',0,'uploadimage',NULL,'ti ti-crop',NULL,4);
 
 
 --

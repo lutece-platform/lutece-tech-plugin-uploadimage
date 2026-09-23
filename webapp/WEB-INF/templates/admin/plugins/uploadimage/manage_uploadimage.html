@@ -1,39 +1,44 @@
 <@pageContainer>
-    <@pageColumn>
-        <@pageHeader title='#i18n{uploadimage.adminFeature.ManageUploadimage.name}' toolsClass='d-flex'>
-			<@aButton href='jsp/admin/plugins/uploadimage/ManageUploadimage.jsp?view=viewOption' title='#i18n{uploadimage.option.create}' buttonIcon='plus' />
+	<@pageColumn>
+		<@pageHeader title='#i18n{uploadimage.adminFeature.ManageUploadimage.name}'>
+			<@aButton href='jsp/admin/plugins/uploadimage/ManageUploadimage.jsp?view=viewOption' title='#i18n{uploadimage.option.create}' buttonIcon='plus' color='primary' />
 		</@pageHeader>
-		<@messages errors=errors />
-		<@messages infos=infos />
-		<@box>
-			<@boxBody>
-			<@table headBody=true >
-			<@tr>
-				<@th>#i18n{uploadimage.option.FieldName}</@th>
-				<@th>Ratio</@th>
-				<@th>#i18n{uploadimage.option.Height}</@th>
-				<@th>#i18n{uploadimage.option.Width}</@th>
-				<@th>#i18n{uploadimage.option.Action}</@th>
-			</@tr>
-			<@tableHeadBodySeparator />
+		<@messages infos=infos![] errors=errors![] warnings=warnings![] />
+		<#if list_options?has_content>
+			<@manageFeature>
 			<#list list_options as option>
-			<@tr>
-				<@td>${option.fieldName!}</@td>
-				<@td>${option.ratio!}</@td>
-				<@td>${option.height!}</@td>
-				<@td>${option.width!}</@td>
-				<@td>
-					<@aButton href='jsp/admin/plugins/uploadimage/ManageUploadimage.jsp?view=viewOption&id_option=${option.id}' title='#i18n{portal.util.labelModify}' buttonIcon='edit' hideTitle=['all'] />
-					<@aButton href='jsp/admin/plugins/uploadimage/ManageUploadimage.jsp?view=confirmRemoveOption&id_option=${option.id}' color='danger' title='#i18n{portal.util.labelDelete}' buttonIcon='trash' hideTitle=['all'] />
-				</@td>
-			</@tr>
+				<@manageFeatureItem>
+					<@manageFeatureItemColumn auto=true flex=false>
+						<@p class='fw-bold fs-3 mb-0'>#i18n{uploadimage.option.FieldName}</@p>
+						${option.fieldName!}
+					</@manageFeatureItemColumn>
+					<@manageFeatureItemColumn auto=true flex=false valign='top'>
+						<@p class='fw-bold fs-3 mb-0'>#i18n{uploadimage.option.Ratio}</@p>
+						${option.ratio!}
+					</@manageFeatureItemColumn>
+					<@manageFeatureItemColumn auto=true flex=false valign='top'>
+						<@p class='fw-bold fs-3 mb-0'>#i18n{uploadimage.option.Width}</@p>
+						${option.width}
+					</@manageFeatureItemColumn>
+					<@manageFeatureItemColumn auto=true flex=false valign='top'>
+						<@p class='fw-bold fs-3 mb-0'>#i18n{uploadimage.option.Height}</@p>
+						${option.height}
+					</@manageFeatureItemColumn>
+					<@manageFeatureItemColumn align='end'>
+						<@aButton href='jsp/admin/plugins/uploadimage/ManageUploadimage.jsp?view=viewOption&amp;id_option=${option.id}' title='#i18n{portal.util.labelModify}' buttonIcon='edit' class='me-1' hideTitle=['all'] />
+						<@aButton href='jsp/admin/plugins/uploadimage/ManageUploadimage.jsp?view=confirmRemoveOption&amp;id_option=${option.id}' color='danger' title='#i18n{portal.util.labelDelete}' buttonIcon='trash' hideTitle=['all'] />
+					</@manageFeatureItemColumn>
+				</@manageFeatureItem>
 			</#list>
-			</@table>
-			<@tform action="jsp/admin/plugins/uploadimage/ManageUploadimage.jsp">
+			</@manageFeature>
+			<@tform action='jsp/admin/plugins/uploadimage/ManageUploadimage.jsp'>
 				<@input type='hidden' name='view' value='manageUploadimage' />
 				<@paginationAdmin paginator=paginator form=0 combo=1 />
 			</@tform>
-		</@boxBody>
-	</@box>
-</@pageColumn>
+		<#else>
+			<@card>
+				<@empty title='#i18n{portal.util.labelNoItem}' iconName='photo-off' subtitle='#i18n{uploadimage.manage_options.emptySubtitle}' actionTitle='#i18n{uploadimage.option.create}' actionUrl='jsp/admin/plugins/uploadimage/ManageUploadimage.jsp?view=viewOption' actionIcon='plus' />
+			</@card>
+		</#if>
+	</@pageColumn>
 </@pageContainer>

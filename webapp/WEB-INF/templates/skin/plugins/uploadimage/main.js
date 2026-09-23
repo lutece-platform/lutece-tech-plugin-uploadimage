@@ -1,329 +1,350 @@
-var paramaters${fieldName} = { width: ${cropperOption.width}, height: ${cropperOption.height} };
+<#if fieldName?has_content>
+/*
+ * Cropping widget of one upload field, rendered by UploadimageJsProvider on top of Cropper.js 1.x.
+ * The cropped image is written to the hidden imagesrc<fieldName> input and announced by the
+ * uploadimage:cropped event; the Cropper instance stays reachable as the image's `cropper` property.
+ */
+( function () {
+	'use strict';
 
-$(function () {
-  'use strict';
-  var $dataHeight = $('#dataHeight${fieldName}').val();
-  var $dataWidth = $('#dataWidth${fieldName}').val();
-  var console = window.console || { log: function () {} },
-      $alert = $('.docs-alert'),
-      $message = $alert.find('.message'),
-      showMessage = function (message, type) {
-        $message.text(message);
+	var FIELD = '${fieldName?js_string}';
+	var ROOT_ID = 'content_upload_image_' + FIELD;
+	var blobUrl = null;
+	var alertTimer = null;
+	var RESPONSIVE = ${cropperOption.responsive?c};
 
-        if (type) {
-          $message.addClass(type);
-        }
+	var options = {
+		data: { x: ${cropperOption.x?c}, y: ${cropperOption.y?c}, width: ${cropperOption.width?c}, height: ${cropperOption.height?c} },
+		viewMode: ${cropperOption.strict?then( 1, 0 )},
+		dragMode: '${cropperOption.dragCrop?then( 'crop', 'none' )}',
+		responsive: false,
+		checkCrossOrigin: ${cropperOption.checkImageOrigin?c},
+		modal: ${cropperOption.modal?c},
+		guides: ${cropperOption.guides?c},
+		highlight: ${cropperOption.highlight?c},
+		background: ${cropperOption.background?c},
+		autoCrop: ${cropperOption.autoCrop?c},
+		movable: ${cropperOption.movable?c},
+		rotatable: ${cropperOption.rotatable?c},
+		zoomable: ${cropperOption.zoomable?c},
+		zoomOnTouch: ${cropperOption.touchDragZoom?c},
+		zoomOnWheel: ${cropperOption.mouseWheelZoom?c},
+		cropBoxMovable: ${cropperOption.cropBoxMovable?c},
+		cropBoxResizable: ${cropperOption.cropBoxResizable?c},
+		toggleDragModeOnDblclick: ${cropperOption.doubleClickToggle?c}
+	};
 
-        $alert.fadeIn();
+	function root() {
+		return document.getElementById( ROOT_ID );
+	}
 
-        setTimeout(function () {
-          $alert.fadeOut();
-        }, 3000);
-      };
+	function find( selector ) {
+		var container = root();
 
-  // Demo
-  // -------------------------------------------------------------------------
-	
-  (function () {
-    var $image = $('.img-container${fieldName} > img'),
-        $dataX = $('#dataX${fieldName}'),
-        $dataY = $('#dataY${fieldName}'),
-        $dataHeight = $('#dataHeight${fieldName}'),
-        $dataWidth = $('#dataWidth${fieldName}'),
-        $dataRotate = $('#dataRotate${fieldName}'),
-        options = {
-           data: {
-             x: ${cropperOption.x},
-             y: ${cropperOption.y},
-             width: ${cropperOption.width},
-             height: ${cropperOption.height}
-           },
-	 
-           strict: ${cropperOption.strict?c},
-           responsive: ${cropperOption.responsive?c},
-           checkImageOrigin: ${cropperOption.checkImageOrigin?c},
-           viewMode: 2,
-           modal: ${cropperOption.modal?c},
-           guides: ${cropperOption.guides?c},
-           highlight: ${cropperOption.highlight?c},
-           background: ${cropperOption.background?c},
-   
-           autoCrop: ${cropperOption.autoCrop?c},
-           autoCropArea: false,
-           dragCrop: ${cropperOption.dragCrop?c},
-           movable: ${cropperOption.movable?c},
-           rotatable: ${cropperOption.rotatable?c},
-           zoomable: ${cropperOption.zoomable?c},
-           touchDragZoom: ${cropperOption.touchDragZoom?c},
-           mouseWheelZoom: ${cropperOption.mouseWheelZoom?c},
-           cropBoxMovable: ${cropperOption.cropBoxMovable?c},
-           cropBoxResizable: ${cropperOption.cropBoxResizable?c},
-           doubleClickToggle: ${cropperOption.doubleClickToggle?c},
+		return container ? container.querySelector( selector ) : null;
+	}
 
-	
-         // aspectRatio: ${cropperOption.ratio},	  
-          preview: '.img-preview',
-          crop: function (data) {
-            $dataX.val(Math.round(data.x));
-            $dataY.val(Math.round(data.y));
-            $dataHeight.val(Math.round(data.height));
-            $dataWidth.val(Math.round(data.width));
-            $dataRotate.val(Math.round(data.rotate));
-          }
-        };
+	function image() {
+		return find( '.img-container' + FIELD + ' > img' );
+	}
 
-// Cropper
-$image.on({
-  ready: function (e) {
-    console.log(e.type);
-  },
-  cropstart: function (e) {
-    console.log(e.type, e.action);
-  },
-  cropmove: function (e) {
-    console.log(e.type, e.action);
-  },
-  cropend: function (e) {
-    console.log(e.type, e.action);
-  },
-  crop: function (e) {
-    console.log(e.type, e.x, e.y, e.width, e.height, e.rotate, e.scaleX, e.scaleY);
-  },
-  zoom: function (e) {
-    console.log(e.type, e.ratio);
-  }
-}).cropper(options);
+	/** The Cropper instance of the widget, once built. */
+	function cropper() {
+		var img = image();
 
+		return img && img.cropper ? img.cropper : null;
+	}
 
-// Methods
-$(document.body).on('click', '[data-method]', function () {
-  var data = $(this).data(),
-      $target,
-      result;
+	function setValue( selector, value ) {
+		var field = find( selector );
 
-      if (!$image.data('cropper')) {
-        return;
-      }
+		if ( field ) {
+			field.value = value;
+		}
+	}
 
-      if (data.method) {
-        data = $.extend({}, data); // Clone a new one
+	/** Mirrors the crop box into the read-out fields of the widget. */
+	function writeCropData( event ) {
+		var data = event.detail;
 
-    if (typeof data.target !== 'undefined') {
-      $target = $(data.target);
+		if ( !data ) {
+			return;
+		}
+		setValue( '#dataX' + FIELD, Math.round( data.x ) );
+		setValue( '#dataY' + FIELD, Math.round( data.y ) );
+		setValue( '#dataWidth' + FIELD, Math.round( data.width ) );
+		setValue( '#dataHeight' + FIELD, Math.round( data.height ) );
+		setValue( '#dataRotate' + FIELD, Math.round( data.rotate ) );
+	}
 
-      if (typeof data.option === 'undefined') {
-        try {
-          data.option = JSON.parse($target.val());
-          } catch (e) {}
-      }
-    }
-    
-    result = $image.cropper(data.method, data.option);
+	function revokeBlobUrl() {
+		if ( blobUrl ) {
+			window.URL.revokeObjectURL( blobUrl );
+			blobUrl = null;
+		}
+	}
 
-    if(data.method === 'deleteImage'){
-        var fieldName= data.option; 
-        $('#imagesrc'+fieldName).val( );
-        $('#canvasImage'+fieldName).html('');
-        $('#deleteButton'+fieldName).hide();
-    }
-		
-   if (data.method === 'getCroppedCanvas') {
-      $('#imagesrc${fieldName}').val(result.toDataURL());
-      $('#canvasImage${fieldName}').html(result);
-      $('#deleteButton${fieldName}').show();
-    }
-	
-    if ($.isPlainObject(result) && $target) {
-      try {
-        $target.val(JSON.stringify(result));
-      } catch (e) {
-      
-      }
-    }
+	/** Transient message in the widget's alert strip. */
+	function showMessage( message, type ) {
+		var strip = find( '.docs-alert' );
+		var text = find( '.docs-alert .message' );
 
-    }
-  }).on('keydown', function (e) {
+		if ( !strip || !text ) {
+			return;
+		}
+		text.textContent = message;
+		if ( type ) {
+			text.classList.add( type );
+		}
+		strip.style.display = 'block';
+		window.clearTimeout( alertTimer );
+		alertTimer = window.setTimeout( function () {
+			strip.style.display = 'none';
+		}, 3000 );
+	}
 
-      if (!$image.data('cropper')) {
-        return;
-      }
+	function showPreview( node ) {
+		var holder = find( '#canvasImage' + FIELD );
+		var button = find( '#deleteButton' + FIELD );
 
-      switch (e.which) {
-        case 37:
-          e.preventDefault();
-          $image.cropper('move', -1, 0);
-          break;
+		if ( holder ) {
+			holder.replaceChildren( node );
+		}
+		if ( button ) {
+			button.classList.remove( 'd-none' );
+		}
+	}
 
-        case 38:
-          e.preventDefault();
-          $image.cropper('move', 0, -1);
-          break;
+	function clearPreview() {
+		var holder = find( '#canvasImage' + FIELD );
+		var button = find( '#deleteButton' + FIELD );
 
-        case 39:
-          e.preventDefault();
-          $image.cropper('move', 1, 0);
-          break;
+		setValue( '#imagesrc' + FIELD, '' );
+		if ( holder ) {
+			holder.replaceChildren();
+		}
+		if ( button ) {
+			button.classList.add( 'd-none' );
+		}
+	}
 
-        case 40:
-          e.preventDefault();
-          $image.cropper('move', 0, 1);
-          break;
-      }
+	/**
+	 * Publishes the cropped canvas: the hidden field carries it back with the host form and the
+	 * uploadimage:cropped event lets a host page upload it itself. A page that owns the upload
+	 * keeps its own getCroppedCanva entry point (the blog editor does).
+	 */
+	function addCroppedImage() {
+		var instance = cropper();
+		var width = find( '#dataWidth' + FIELD );
+		var height = find( '#dataHeight' + FIELD );
+		var size = {};
+		var canvas;
 
-    });
+		if ( !instance ) {
+			return;
+		}
+		if ( typeof window.getCroppedCanva === 'function' ) {
+			window.getCroppedCanva( FIELD );
+			return;
+		}
+		if ( width && width.value ) {
+			size.width = Number( width.value );
+		}
+		if ( height && height.value ) {
+			size.height = Number( height.value );
+		}
+		canvas = instance.getCroppedCanvas( size );
+		if ( !canvas ) {
+			return;
+		}
+		setValue( '#imagesrc' + FIELD, canvas.toDataURL() );
+		showPreview( canvas );
+		document.dispatchEvent( new CustomEvent( 'uploadimage:cropped', {
+			detail: { fieldName: FIELD, canvas: canvas }
+		} ) );
+	}
 
-     // zoom
-     var $zoom = $("zoom_in${fieldName}");
-    
-    // Import image
-    var $inputImage = $('#inputImage${fieldName}'),
-        URL = window.URL || window.webkitURL,
-        blobURL;
+	/** Runs the Cropper method named by the clicked control, with its JSON or numeric argument. */
+	function runCropperMethod( button ) {
+		var instance = cropper();
+		var method = button.getAttribute( 'data-cropper-method' );
+		var raw = button.getAttribute( 'data-cropper-option' );
+		var option;
 
-    if (URL) {
-      $inputImage.change(function (){
-	
-      $('#label${fieldName}').hide();
-      $('#buttonOption${fieldName}').show();
-          var files = this.files,  file;
-
-            if (!$image.data('cropper')) {
-              return;
-            }
-      
-            if (files && files.length) {
-              file = files[0];
-              if (/^image\/\w+$/.test(file.type)) {
-                blobURL = URL.createObjectURL(file);
-                $image.one('built.cropper', function () {
-                  URL.revokeObjectURL(blobURL); // Revoke when load complete
-        
-                }).cropper('reset').cropper('load', blobURL);
-          
-                $inputImage.val('');
-              } else {
-                showMessage('Please choose an image file.');
-              }
-            }
-        });
-	
-    } else {
-      $inputImage.parent().remove();
-    }
-    
-    // Options
-    $('.docs-options :checkbox').on('change', function () {
-      var $this = $(this);
-
-      if (!$image.data('cropper')) {
-        return;
-      }
-
-      options[$this.val()] = $this.prop('checked');
-      $image.cropper('destroy').cropper(options);
-    });
-
-    // Tooltips
-    // Tooltips: Bootstrap 5 exposes a class, not a jQuery plugin, and renamed the attribute.
-    if ( window.bootstrap && window.bootstrap.Tooltip )
-    {
-      document.querySelectorAll( '[data-bs-toggle="tooltip"]' ).forEach( function ( el ) {
-        new window.bootstrap.Tooltip( el );
-      } );
-    }
-
-   //hide button
-
-  if(!options.rotatable){
-	$('#rotate_right').hide();
-	$('#rotate_left').hide();
-   };
-  if(!options.zoomable){
-	$('#zoom_in').hide();
-	$('#zoom_out').hide();
-   };
-  if(!options.movable){
-	$('#move').hide();
-   };
-
-  }());
-   
-});
-
-function zoomIn(fieldName) {
-    var element = ".img-container" + fieldName;
-    $(element+" > img").cropper("zoom",0.1);
-}
-
-function zoomOut(fieldName) {
-    var elem = ".img-container" + fieldName;
-    $(elem+" > img").cropper("zoom",-0.1);
-}
-
-function move(fieldName) {
-    var elem = ".img-container" + fieldName;
-    $(elem+" > img").cropper("setDragMode",'move');
-}
-function rotate(fieldName, deg) {
-    var elem = ".img-container" + fieldName;
-    $(elem+" > img").cropper("rotate",deg);
-}
-
-function cropBox(fieldName) {
-    var elem = ".img-container" + fieldName;
-    $(elem+" > img").cropper("crop");
-}
-
-function clearBox(fieldName) {
-    var elem = ".img-container" + fieldName;
-    $(elem+" > img").cropper("clear");
-}
-
-function resetBox(fieldName) {
-    var elem = ".img-container" + fieldName;
-    $(elem+" > img").cropper("reset");
-}
-
-function getCroppedCanva( fieldName ){
-	const CurrentIdBlog = $('#id').val();
-	const CurrentdHeight = $('#dataHeight'+fieldName).val();
-	const CurrentdWidth = $('#dataWidth'+fieldName).val();
-	const $element= $('.img-container'+fieldName+' > img');
-	const CurrentfileType = document.querySelector('#fileType') != null ? document.querySelector('#fileType').value : 0;
-	result = $element.cropper('getCroppedCanvas', { width: CurrentdWidth, height: CurrentdHeight });
-	doAddContent( fieldName, result.toDataURL( 'image/jpeg',1.0 ), CurrentfileType, CurrentIdBlog ).then( resp => {
-		/* call the callback and populate the Title field with the file name */
-		if ( resp.status == 'OK' ){
-			if( resp.result == "BLOG_LOCKED" ){
-				setBlogToast( 'warning', 'Attention', 'Billet verrouillé !' );
-			} else {
-				//const CurrentExtension = file.name.split('.').pop().toLowerCase();
-				setListFile( resp.result[1], resp.result[0].replace(/'/g, "\\'"), CurrentfileType, '', CurrentIdBlog )
+		if ( !instance || typeof instance[ method ] !== 'function' ) {
+			return;
+		}
+		if ( raw !== null && raw !== '' ) {
+			try {
+				option = JSON.parse( raw );
+			} catch ( e ) {
+				option = raw;
 			}
 		}
-	});
-};
+		instance[ method ]( option );
+	}
 
+	function onClick( event ) {
+		var method = event.target.closest( '[data-cropper-method]' );
+		var action = event.target.closest( '[data-cropimage-action]' );
 
-function getCroppedCanva2(fieldName){
-	var $element= $('.img-container'+fieldName+' > img');
-	result = $element.cropper('getCroppedCanvas', paramaters${fieldName});
-	$('#imagesrc'+fieldName).val(result.toDataURL());
-	// $('#canvasImage'+fieldName).html(result);	
-	$('#content-list').append(result);
-	$('#deleteButton'+fieldName).show();
-};
+		if ( method ) {
+			runCropperMethod( method );
+			return;
+		}
+		if ( !action ) {
+			return;
+		}
+		if ( action.getAttribute( 'data-cropimage-action' ) === 'add' ) {
+			addCroppedImage();
+		} else {
+			clearPreview();
+		}
+	}
 
-function  getCanvasWithParam(fieldName, param){
-	var $element= $('.img-container'+fieldName+' > img');
-	result = $element.cropper('getCroppedCanvas', param);
-	$('#imagesrc'+fieldName).val(result.toDataURL());
-	$('#canvasImage'+fieldName).html(result);
-	$('#deleteButton'+fieldName).show();	
-};
+	/** Arrow keys move the image, only while the focus is on the widget and not in one of its fields. */
+	function onKeydown( event ) {
+		var instance = cropper();
+		var steps = { ArrowLeft: [ -1, 0 ], ArrowUp: [ 0, -1 ], ArrowRight: [ 1, 0 ], ArrowDown: [ 0, 1 ] };
+		var step = steps[ event.key ];
 
-function  deleteImage(fieldName){ 
-  $('#imagesrc'+fieldName).val( );
-  $('#canvasImage'+fieldName).html('');
-  $('#deleteButton'+fieldName).hide();	
-};
+		if ( !step || !instance || event.target.closest( 'input, textarea, select, [contenteditable]' ) ) {
+			return;
+		}
+		event.preventDefault();
+		instance.move( step[ 0 ], step[ 1 ] );
+	}
+
+	/** Replaces the cropped image with the file the user picked, without uploading it. */
+	function onFileChange( event ) {
+		var instance = cropper();
+		var file = event.target.files && event.target.files.length ? event.target.files[ 0 ] : null;
+		var label = find( '#label' + FIELD );
+		var toolbar = find( '#buttonOption' + FIELD );
+
+		if ( !file || !instance ) {
+			return;
+		}
+		if ( !/^image\/\w+$/.test( file.type ) ) {
+			showMessage( '#i18n{uploadimage.model.message.notAnImage}', 'warning' );
+			return;
+		}
+		if ( label ) {
+			label.classList.add( 'd-none' );
+		}
+		if ( toolbar ) {
+			toolbar.classList.remove( 'd-none' );
+		}
+		revokeBlobUrl();
+		blobUrl = window.URL.createObjectURL( file );
+		instance.replace( blobUrl );
+		event.target.value = '';
+	}
+
+	/** Hides the controls the stored options disable. */
+	function hideDisabledControls() {
+		var hidden = [];
+
+		if ( !options.rotatable ) {
+			hidden.push( '#rotate_left_' + FIELD, '#rotate_right_' + FIELD );
+		}
+		if ( !options.zoomable ) {
+			hidden.push( '#zoom_in_' + FIELD, '#zoom_out_' + FIELD );
+		}
+		hidden.forEach( function ( selector ) {
+			var button = find( selector );
+
+			if ( button ) {
+				button.classList.add( 'd-none' );
+			}
+		} );
+	}
+
+	/** The site theme does not initialise Bootstrap tooltips, the admin theme does. */
+	function initTooltips() {
+		var container = root();
+
+		if ( !container || !window.bootstrap || !window.bootstrap.Tooltip ) {
+			return;
+		}
+		container.querySelectorAll( '[data-bs-toggle="tooltip"]' ).forEach( function ( element ) {
+			window.bootstrap.Tooltip.getOrCreateInstance( element );
+		} );
+	}
+
+	/**
+	 * Runs the callback once the element has a width: Cropper sizes itself on its wrapper, so a
+	 * widget built while hidden (a modal not shown yet) would stay at zero size.
+	 */
+	function whenVisible( element, callback ) {
+		var observer;
+
+		if ( element.offsetWidth > 0 || typeof window.ResizeObserver !== 'function' ) {
+			callback();
+			return;
+		}
+		observer = new window.ResizeObserver( function () {
+			if ( element.offsetWidth > 0 ) {
+				observer.disconnect();
+				callback();
+			}
+		} );
+		observer.observe( element );
+	}
+
+	/**
+	 * Follows the size of the wrapper instead of the window: Cropper's own window listener rescales the
+	 * crop box by the new wrapper width, which is zero while the widget is hidden, and the box never recovers.
+	 */
+	function followWrapperSize( wrapper ) {
+		var observer;
+
+		if ( !RESPONSIVE || typeof window.ResizeObserver !== 'function' ) {
+			return;
+		}
+		observer = new window.ResizeObserver( function () {
+			var instance = cropper();
+
+			if ( instance && instance.ready && wrapper.offsetWidth > 0 && wrapper.offsetHeight > 0 ) {
+				instance.resize();
+			}
+		} );
+		observer.observe( wrapper );
+	}
+
+	function init() {
+		var container = root();
+		var img = image();
+		var input = find( '#inputImage' + FIELD );
+
+		if ( !container || !img ) {
+			return;
+		}
+		if ( typeof window.Cropper !== 'function' ) {
+			console.error( 'uploadimage: Cropper.js is not loaded, call @addRequiredJsUploadImages before @cropimage' );
+			return;
+		}
+		img.addEventListener( 'ready', revokeBlobUrl );
+		img.addEventListener( 'crop', writeCropData );
+		whenVisible( img.parentNode, function () {
+			new window.Cropper( img, options );
+			followWrapperSize( img.parentNode );
+		} );
+		container.addEventListener( 'click', onClick );
+		container.addEventListener( 'keydown', onKeydown );
+		if ( input && window.URL ) {
+			input.addEventListener( 'change', onFileChange );
+		} else if ( input ) {
+			input.remove();
+		}
+		hideDisabledControls();
+		initTooltips();
+	}
+
+	if ( document.readyState === 'complete' ) {
+		init();
+	} else {
+		window.addEventListener( 'load', init );
+	}
+} )();
+</#if>

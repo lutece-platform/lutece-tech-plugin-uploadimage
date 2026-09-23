@@ -1,2 +1,12 @@
 <#include "/skin/plugins/uploadimage/uploadimage.html" />
-<@cropimage  fieldName= "fieldName"  file="images/admin/skin/plugins/uploadimage/picture.jpg"  cssClass="cssClass"  synchronous= "false"/>
+<@cTpl>
+<@cContainer>
+	<@cRow>
+		<@cCol>
+			<@cTitle level=2>#i18n{uploadimage.xpage.uploadimage.pageTitle}</@cTitle>
+			<@addRequiredJsUploadImages />
+			<@cropimage fieldName='fieldName' file='images/admin/skin/plugins/uploadimage/picture.jpg' cssClass='text-center' synchronous='false' />
+		</@cCol>
+	</@cRow>
+</@cContainer>
+</@cTpl>

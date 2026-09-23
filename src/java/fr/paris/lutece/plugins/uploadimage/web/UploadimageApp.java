@@ -33,62 +33,37 @@
  */
 package fr.paris.lutece.plugins.uploadimage.web;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import fr.paris.lutece.plugins.uploadimage.business.Options;
-import fr.paris.lutece.plugins.uploadimage.business.OptionsHome;
-import fr.paris.lutece.plugins.uploadimage.service.UploadImageCacheService;
-import fr.paris.lutece.portal.web.xpages.XPage;
-import fr.paris.lutece.portal.service.template.AppTemplateService;
-import fr.paris.lutece.portal.util.mvc.xpage.MVCApplication;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.View;
+import fr.paris.lutece.portal.util.mvc.xpage.MVCApplication;
 import fr.paris.lutece.portal.util.mvc.xpage.annotations.Controller;
-import fr.paris.lutece.util.html.HtmlTemplate;
+import fr.paris.lutece.portal.web.xpages.XPage;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
 import jakarta.inject.Named;
-
-import org.apache.commons.lang3.util.*;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
- * This class provides a simple implementation of an XPage
+ * Front-office page showing the cropping widget on a sample image.
  */
- 
 @RequestScoped
 @Named( "uploadimage.xpage.uploadimage" )
-@Controller( xpageName = "uploadimage" , pageTitleI18nKey = "uploadimage.xpage.uploadimage.pageTitle" , pagePathI18nKey = "uploadimage.xpage.uploadimage.pagePathLabel" )
+@Controller( xpageName = "uploadimage", pageTitleI18nKey = "uploadimage.xpage.uploadimage.pageTitle", pagePathI18nKey = "uploadimage.xpage.uploadimage.pagePathLabel", securityTokenEnabled = true )
 public class UploadimageApp extends MVCApplication
 {
-    @Inject
-    private UploadImageCacheService _cacheService;
-
+    private static final long serialVersionUID = 1L;
     private static final String TEMPLATE_XPAGE = "/skin/plugins/uploadimage/uploadimageXpage.html";
- // Templates
-    private static final String TEMPLATE_MAIN_UPLOAD_IMAGE_JS = "skin/plugins/uploadimage/main.js";
-    
     private static final String VIEW_HOME = "home";
-    
-    private static final String IDOPTION = "id_option";
-    
-    private static final String MARK_FIELDNAME = "fieldName";
-    private static final String PARAMATER_FIELDNAME = "fieldName";
-    
+
     /**
-     * Returns the content of the page uploadimage. 
-     * @param request The HTTP request
-     * @return The view
+     * The page holding the widget.
+     *
+     * @param request
+     *            the http request
+     * @return the page
      */
-    @View( value = VIEW_HOME , defaultView = true )
+    @View( value = VIEW_HOME, defaultView = true )
     public XPage viewHome( HttpServletRequest request )
     {
-    	Map<String, Object> model = new HashMap<String, Object>(  );
-    //	model.put("main", getMainUploadJs(request));
-        return getXPage( TEMPLATE_XPAGE, request.getLocale(  ), model );
+        return getXPage( TEMPLATE_XPAGE, getLocale( request ) );
     }
-    
-    
-
 }
