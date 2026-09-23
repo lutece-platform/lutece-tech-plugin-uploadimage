@@ -41,17 +41,4 @@
     <portlets>
    </portlets>
    
-   <css-stylesheets>
-        <css-stylesheets-scope>portal</css-stylesheets-scope>
-        <css-stylesheet>uploadimage/cropper.css</css-stylesheet>
-        <css-stylesheet>uploadimage/main.css</css-stylesheet>
-    </css-stylesheets>
-    
-	<javascript-files>
-        <javascript-files-scope>portal</javascript-files-scope>
-        <javascript-file>uploadimage/cropper.js</javascript-file>
-      
-    </javascript-files>
-   
-   
 </plug-in>

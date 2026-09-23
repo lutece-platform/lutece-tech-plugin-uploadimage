@@ -81,6 +81,12 @@ public class ManageUploadimageJspBean extends MVCAdminJspBean
     private static final String MESSAGE_CONFIRM_REMOVE_OPTION = "uploadimage.message.confirmRemoveOptions";
     private static final String INFO_OPTION_CREATED = "uploadimage.message.option.assigned";
     private static final String INFO_OPTION_UPDATE = "uploadimage.message.option.update";
+    private static final String ERROR_FIELDNAME = "uploadimage.message.error.fieldName";
+    private static final String ERROR_FIELDNAME_DUPLICATE = "uploadimage.message.error.fieldNameDuplicate";
+    private static final String ERROR_RATIO = "uploadimage.message.error.ratio";
+    private static final String ERROR_UNKNOWN_OPTION = "uploadimage.message.error.unknownOption";
+    private static final String PATTERN_FIELDNAME = "[a-zA-Z0-9]+";
+    private static final String PATTERN_RATIO = "[0-9]+/[0-9]+";
 
     private static final String VIEW_MANAGE_UPLOADIMAGE = "manageUploadimage";
     private static final String VIEW_OPTION = "viewOption";
@@ -123,6 +129,7 @@ public class ManageUploadimageJspBean extends MVCAdminJspBean
     private int _nDefaultItemsPerPage;
     private String _strCurrentPageIndex;
     private int _nItemsPerPage;
+    private Options _option;
 
     /**
      * The list of cropping options.
@@ -168,9 +175,20 @@ public class ManageUploadimageJspBean extends MVCAdminJspBean
         String strKey = request.getParameter( PARAMETER_IDOPTION );
         Options option = new Options( );
 
-        if ( strKey != null )
+        if ( _option != null )
         {
-            option = OptionsHome.findByPrimaryKey( Integer.parseInt( strKey ) );
+            option = _option;
+            _option = null;
+        }
+        else if ( strKey != null )
+        {
+            option = findOption( strKey );
+
+            if ( option == null )
+            {
+                return redirect( request, AdminMessageService.getMessageUrl( request, ERROR_UNKNOWN_OPTION, getViewUrl( VIEW_MANAGE_UPLOADIMAGE ),
+                        AdminMessage.TYPE_STOP ) );
+            }
         }
         else
         {
@@ -224,10 +242,30 @@ public class ManageUploadimageJspBean extends MVCAdminJspBean
         option.setFieldName( request.getParameter( PARAMATER_FIELDNAME ) );
 
         String strKey = request.getParameter( PARAMETER_IDOPTION );
+        boolean bModify = strKey != null && !strKey.isEmpty( );
 
-        if ( strKey != null && !strKey.isEmpty( ) )
+        if ( bModify )
         {
-            option.setId( Integer.parseInt( strKey ) );
+            Options stored = findOption( strKey );
+
+            if ( stored == null )
+            {
+                addError( ERROR_UNKNOWN_OPTION, getLocale( ) );
+
+                return redirectView( request, VIEW_MANAGE_UPLOADIMAGE );
+            }
+            option.setId( stored.getId( ) );
+        }
+
+        if ( !validate( option ) )
+        {
+            _option = option;
+
+            return bModify ? redirect( request, VIEW_OPTION, PARAMETER_IDOPTION, option.getId( ) ) : redirectView( request, VIEW_OPTION );
+        }
+
+        if ( bModify )
+        {
             OptionsHome.update( option );
             addInfo( INFO_OPTION_UPDATE, getLocale( ) );
         }
@@ -238,6 +276,43 @@ public class ManageUploadimageJspBean extends MVCAdminJspBean
         }
 
         return redirectView( request, VIEW_MANAGE_UPLOADIMAGE );
+    }
+
+    /**
+     * Checks the field name, its uniqueness and the ratio, adding an error for each problem.
+     *
+     * @param option
+     *            the option read from the form
+     * @return true when the option can be stored
+     */
+    private boolean validate( Options option )
+    {
+        boolean bValid = true;
+        String strFieldName = option.getFieldName( );
+
+        if ( strFieldName == null || !strFieldName.matches( PATTERN_FIELDNAME ) )
+        {
+            addError( ERROR_FIELDNAME, getLocale( ) );
+            bValid = false;
+        }
+        else
+        {
+            Options homonym = OptionsHome.findByFieldName( strFieldName );
+
+            if ( homonym != null && homonym.getId( ) != option.getId( ) )
+            {
+                addError( ERROR_FIELDNAME_DUPLICATE, getLocale( ) );
+                bValid = false;
+            }
+        }
+
+        if ( option.getRatio( ) == null || !option.getRatio( ).matches( PATTERN_RATIO ) )
+        {
+            addError( ERROR_RATIO, getLocale( ) );
+            bValid = false;
+        }
+
+        return bValid;
     }
 
     /**
@@ -267,14 +342,35 @@ public class ManageUploadimageJspBean extends MVCAdminJspBean
     @Action( ACTION_REMOVE_OPTION )
     public String removeOptions( HttpServletRequest request )
     {
-        String strKey = request.getParameter( PARAMETER_IDOPTION );
+        Options option = findOption( request.getParameter( PARAMETER_IDOPTION ) );
 
-        if ( strKey != null && !strKey.isEmpty( ) )
+        if ( option == null )
         {
-            OptionsHome.remove( Integer.parseInt( strKey ) );
+            addError( ERROR_UNKNOWN_OPTION, getLocale( ) );
+        }
+        else
+        {
+            OptionsHome.remove( option.getId( ) );
         }
 
         return redirectView( request, VIEW_MANAGE_UPLOADIMAGE );
+    }
+
+    /**
+     * The stored option an identifier names.
+     *
+     * @param strKey
+     *            the identifier read from the request
+     * @return the option, or null when the identifier is not a number or names no option
+     */
+    private static Options findOption( String strKey )
+    {
+        if ( strKey == null || !strKey.matches( "[0-9]{1,9}" ) )
+        {
+            return null;
+        }
+
+        return OptionsHome.findByPrimaryKey( Integer.parseInt( strKey ) );
     }
 
     /**

@@ -1,159 +1,80 @@
-	<@uploadImage />
-	<#macro uploadImage >
-	<div class="container">
-	<legend>#i18n{uploadimage.manage.option.crop}</legend>
-	<form class="form-horizontal" method="post" action="jsp/admin/plugins/uploadimage/ManageUploadimage.jsp">
-		<@messages errors=errors /> <@messages infos=infos />
-		<input type="hidden" name="action" id="action" value="manageOptions"/>
-        <div class="">
-		<input type="hidden" name="id_option" id="id_option" value="<#if (cropperOption.id)?? && cropperOption.id gt 0>${cropperOption.id}</#if>"/>
-          
-          <ul class="" role="menu" aria-labelledby="toggleOptions">
-            <li role="presentation">
-              <label class="checkbox-inline">
-		
-                <input type="checkbox" name="strict" value="true" <#if cropperOption.strict> checked </#if> > 
-                 <span class='badge' >strict</span> <small>#i18n{uploadimage.description.strict}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="responsive" value="true" <#if cropperOption.responsive> checked </#if> > 
-                 <span class='badge' >responsive</span> <small>#i18n{uploadimage.description.responsive}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="checkimageorigin" value="true" <#if cropperOption.checkImageOrigin> checked </#if> >
-                <span class='badge' >checkImageOrigin</span> <small>#i18n{uploadimage.description.checkImageOrigin}</small>
-              </label>
-            </li>
-
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="modal" value="true" <#if cropperOption.modal> checked </#if>> 
-                <span class='badge' >modal</span> <small>#i18n{uploadimage.description.modal}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="guides" value="true" <#if cropperOption.guides> checked </#if>> 
-                <span class='badge' >guides</span> <small>#i18n{uploadimage.description.guides}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="highlight" value="true" <#if cropperOption.highlight> checked </#if>> 
-                <span class='badge' >highlight</span> <small>#i18n{uploadimage.description.highlight}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="background" value="true" <#if cropperOption.background> checked </#if>> 
-                <span class='badge' >background</span> <small>#i18n{uploadimage.description.background}</small>
-              </label>
-            </li>
-
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="autocrop" value="true" <#if cropperOption.autoCrop> checked </#if>> 
-                <span class='badge' >autoCrop</span> <small>#i18n{uploadimage.description.autoCrop}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="dragcrop" value="true" <#if cropperOption.dragCrop> checked </#if>> 
-                <span class='badge' >dragCrop</span> <small>#i18n{uploadimage.description.dragCrop}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="movable" value="true" <#if cropperOption.movable> checked </#if>>
-                <span class='badge' >movable</span> <small>#i18n{uploadimage.description.movable}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="rotatable" value="true" <#if cropperOption.rotatable> checked </#if>>
-                <span class='badge' >rotatable</span> <small>#i18n{uploadimage.description.rotatable}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="zoomable" value="true" <#if cropperOption.zoomable> checked </#if>>
-                <span class='badge' >zoomable</span> <small>#i18n{uploadimage.description.zoomable}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="touchdragzoom" value="true" <#if cropperOption.touchDragZoom> checked </#if>>
-                <span class='badge' >touchDragZoom</span> <small>#i18n{uploadimage.description.touchDragZoom}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="mousewheelzoom" value="true" <#if cropperOption.mouseWheelZoom> checked </#if>> 
-                <span class='badge' >mouseWheelZoom</span> <small>#i18n{uploadimage.description.mouseWheelZoom}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="cropboxmovable" value="true" <#if cropperOption.cropBoxMovable> checked </#if>> 
-                <span class='badge' >cropBoxMovable</span> <small>#i18n{uploadimage.description.cropBoxMovable}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="cropboxresizable" value="true" <#if cropperOption.cropBoxResizable> checked </#if>>
-                <span class='badge' >cropBoxResizable</span> <small>#i18n{uploadimage.description.cropBoxResizable}</small>
-              </label>
-            </li>
-            <li role="presentation">
-              <label class="checkbox-inline">
-                <input type="checkbox" name="doubleclicktoggle" value="true" <#if cropperOption.doubleClickToggle> checked </#if>> 
-                <span class='badge' >doubleClickToggle</span> <small>#i18n{uploadimage.description.doubleClickToggle}</small>
-              </label>
-            </li>
-          </ul>
-        </div><!-- /.dropdown -->
- <!-- <h3 class="page-header">Data:</h3> -->
-        <div class="docs-data">
-          <div class="input-group">
-            <label class="input-group-addon" for="dataX">#i18n{uploadimage.option.X}</label>
-            <input class="form-control" id="dataX" type="number" placeholder="x" name="x" value="${cropperOption.x!}" required>
-            <span class="input-group-addon">px</span>
-          </div>
-          <div class="input-group">
-            <label class="input-group-addon" for="dataY">#i18n{uploadimage.option.Y}</label>
-            <input class="form-control" id="dataY"  type="number" placeholder="y" name="y" value="${cropperOption.y!}" required>
-            <span class="input-group-addon">px</span>
-          </div>
-          <div class="input-group">
-            <label class="input-group-addon" for="dataWidth">#i18n{uploadimage.option.Width}</label>
-            <input class="form-control" id="dataWidth" type="number" placeholder="width" name="width" value="${cropperOption.width!}" required>
-            <span class="input-group-addon">px</span>
-          </div>
-          <div class="input-group">
-            <label class="input-group-addon" for="dataHeight">#i18n{uploadimage.option.Height}</label>
-            <input class="form-control" id="dataHeight" type="number" placeholder="height" name="height" value="${cropperOption.height!}" required>
-            <span class="input-group-addon">px</span>
-          </div>
-          <div class="input-group">
-            <label class="input-group-addon" for="dataRatio">#i18n{uploadimage.option.Ratio}</label>
-            <input class="form-control" id="dataRatio" type="text" placeholder="16/9" name="ratio" value="${cropperOption.ratio!}" pattern="[0-9]+[/][0-9]+" title="Number/Number" required>
-            <span class="input-group-addon">w/h</span>
-          </div>
-          <div class="input-group">
-            <label class="input-group-addon" for="dataFieldName">#i18n{uploadimage.option.FieldName}</label>
-            <input class="form-control" id="dataFieldName" type="text" placeholder="fieldName" name="fieldName" value="${cropperOption.fieldName!}" pattern="[a-zA-Z0-9]+" title="Alpha-Numeric" required>
-            <span class="input-group-addon">string</span>
-          </div>
-          	 <div class="container">
-				<input class="btn btn-primary" value="#i18n{uploadimage.button.submit}" type="submit"/>
-				<a class="btn btn-primary" href="javascript:history.go(-1)">#i18n{uploadimage.button.retour}</a>
-  			</div>
-        </div>
-
-  </form>
-  </div>
-  </#macro>
+<#--
+	Cropper flags: the request parameter the bean reads is lower-case, the bean property is camel-case,
+	and both the label and the description have an i18n key derived from the property.
+-->
+<#assign cropperFlags = [
+	{ 'param': 'strict', 'prop': 'strict' },
+	{ 'param': 'responsive', 'prop': 'responsive' },
+	{ 'param': 'checkimageorigin', 'prop': 'checkImageOrigin' },
+	{ 'param': 'modal', 'prop': 'modal' },
+	{ 'param': 'guides', 'prop': 'guides' },
+	{ 'param': 'highlight', 'prop': 'highlight' },
+	{ 'param': 'background', 'prop': 'background' },
+	{ 'param': 'autocrop', 'prop': 'autoCrop' },
+	{ 'param': 'dragcrop', 'prop': 'dragCrop' },
+	{ 'param': 'movable', 'prop': 'movable' },
+	{ 'param': 'rotatable', 'prop': 'rotatable' },
+	{ 'param': 'zoomable', 'prop': 'zoomable' },
+	{ 'param': 'touchdragzoom', 'prop': 'touchDragZoom' },
+	{ 'param': 'mousewheelzoom', 'prop': 'mouseWheelZoom' },
+	{ 'param': 'cropboxmovable', 'prop': 'cropBoxMovable' },
+	{ 'param': 'cropboxresizable', 'prop': 'cropBoxResizable' },
+	{ 'param': 'doubleclicktoggle', 'prop': 'doubleClickToggle' }
+]>
+<@pageContainer>
+	<@pageColumn>
+		<@pageHeader title='#i18n{uploadimage.option.pageTitle}'>
+			<@aButton href='jsp/admin/plugins/uploadimage/ManageUploadimage.jsp?view=manageUploadimage' buttonIcon='arrow-left' title='#i18n{portal.util.labelBack}' color='light' />
+		</@pageHeader>
+		<@messages infos=infos![] errors=errors![] warnings=warnings![] />
+		<#assign optionId = ''>
+		<#if ((cropperOption.id)!0) gt 0><#assign optionId = cropperOption.id?c></#if>
+		<@tform method='post' name='manage_option' action='jsp/admin/plugins/uploadimage/ManageUploadimage.jsp' boxed=true>
+			<@input type='hidden' name='action' id='action' value='manageOptions' />
+			<@input type='hidden' name='id_option' id='id_option' value=optionId />
+			<@formGroup labelFor='dataFieldName' labelKey='#i18n{uploadimage.option.FieldName}' mandatory=true rows=2>
+				<@input type='text' id='dataFieldName' name='fieldName' value='${cropperOption.fieldName!}' placeHolder='fieldName' mandatory=true params='pattern="[a-zA-Z0-9]+"' />
+			</@formGroup>
+			<@formGroup labelFor='dataX' labelKey='#i18n{uploadimage.option.X}' mandatory=true rows=2>
+				<@inputGroup>
+					<@input type='number' id='dataX' name='x' value='${cropperOption.x!}' mandatory=true />
+					<@inputGroupItem>px</@inputGroupItem>
+				</@inputGroup>
+			</@formGroup>
+			<@formGroup labelFor='dataY' labelKey='#i18n{uploadimage.option.Y}' mandatory=true rows=2>
+				<@inputGroup>
+					<@input type='number' id='dataY' name='y' value='${cropperOption.y!}' mandatory=true />
+					<@inputGroupItem>px</@inputGroupItem>
+				</@inputGroup>
+			</@formGroup>
+			<@formGroup labelFor='dataWidth' labelKey='#i18n{uploadimage.option.Width}' mandatory=true rows=2>
+				<@inputGroup>
+					<@input type='number' id='dataWidth' name='width' value='${cropperOption.width!}' mandatory=true />
+					<@inputGroupItem>px</@inputGroupItem>
+				</@inputGroup>
+			</@formGroup>
+			<@formGroup labelFor='dataHeight' labelKey='#i18n{uploadimage.option.Height}' mandatory=true rows=2>
+				<@inputGroup>
+					<@input type='number' id='dataHeight' name='height' value='${cropperOption.height!}' mandatory=true />
+					<@inputGroupItem>px</@inputGroupItem>
+				</@inputGroup>
+			</@formGroup>
+			<@formGroup labelFor='dataRatio' labelKey='#i18n{uploadimage.option.Ratio}' mandatory=true rows=2>
+				<@inputGroup>
+					<@input type='text' id='dataRatio' name='ratio' value='${cropperOption.ratio!}' placeHolder='16/9' mandatory=true params='pattern="[0-9]+[/][0-9]+"' />
+					<@inputGroupItem>w/h</@inputGroupItem>
+				</@inputGroup>
+			</@formGroup>
+			<@formGroup labelKey='#i18n{uploadimage.manage.option.crop}' rows=2>
+				<#list cropperFlags as flag>
+					<@formGroup labelFor='${flag.param}' helpKey='#i18n{uploadimage.description.${flag.prop}}'>
+						<@checkBox orientation='switch' id='${flag.param}' name='${flag.param}' value='true' checked=(cropperOption[flag.prop])!false labelKey='#i18n{uploadimage.model.entity.options.attribute.${flag.prop}}' />
+					</@formGroup>
+				</#list>
+			</@formGroup>
+			<@formGroup rows=2>
+				<@button type='submit' buttonIcon='device-floppy' title='#i18n{uploadimage.button.submit}' color='primary' />
+			</@formGroup>
+		</@tform>
+	</@pageColumn>
+</@pageContainer>

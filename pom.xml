@@ -29,14 +29,6 @@
             <version>[8.0.0,)</version>
             <type>lutece-core</type>
         </dependency>
-        <!-- The cropping widget this plugin vendors is built on jQuery, which the v8 webapp no longer ships:
-             this library brings it back through the theme's optional include. -->
-        <dependency>
-            <groupId>fr.paris.lutece.plugins</groupId>
-            <artifactId>library-theme-jquery</artifactId>
-            <version>[2.0.0-SNAPSHOT,)</version>
-            <type>lutece-plugin</type>
-        </dependency>
         <dependency>
             <groupId>fr.paris.lutece.plugins</groupId>
             <artifactId>library-lutece-unit-testing</artifactId>
